@@ -58,6 +58,12 @@ Carbon utilizes dotenv[https://github.com/motdotla/dotenv] for environment varia
 - HOST (hostname for application)
 - MONGODB_URL (mongo db url for connection)
 - COLLECTION_NAME (collection name for users)
+- API_KEY (Vonage API key)
+- API_SECRET (Vonage API Secret)
+
+# Authenication
+
+Carbon utilizes opentok-jwt[https://www.npmjs.com/package/opentok-jwt] for creating and validation JWT tokens.
 
 # API Definition
 
