@@ -17,7 +17,7 @@ exports.verifyToken = (token) => {
   }
 };
 
-exports.generateToken = async (payload) => {
+exports.generateToken = (payload) => {
   try {
     const token = jwt.sign(...payload, apiSecret);
     return token;
