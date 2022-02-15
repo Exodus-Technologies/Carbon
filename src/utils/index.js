@@ -1,5 +1,6 @@
 'use strict';
 
+import { validationResult } from '../validations';
 import config from '../config';
 
 const requestResponse = (req, res, next) => {
