@@ -1,0 +1,36 @@
+paths:
+  /auth-service/:
+    get:
+      summary: Main route of auth service
+      operationId: mainRoute
+      tags:
+        - app
+      responses:
+        '200':
+          description: Main route of auth service
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+
+  /auth-service/probeCheck:
+    get:
+      summary: route for getting the status or healthcheck of microservice
+      operationId: probeCheck
+      tags:
+        - app
+      responses:
+        '200':
+          description: route for getting the status or healthcheck of microservice
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+
+definitions:
+  SuccessResponse:
+    type: object
+    required:
+      - statusCode
+      - message
+    properties:
+      statusCode:
+        type: number
+      message:
+        type: string
