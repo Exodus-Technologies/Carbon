@@ -7,10 +7,6 @@ const config = {
   PORT: process.env.PORT,
   HASH_SALT: process.env.HASH_SALT,
   sources: {
-    vonage: {
-      apiKey: process.env.API_KEY,
-      apiSecret: process.env.API_SECRET
-    },
     database: {
       clusterName: process.env.CLUSTER_NAME,
       dbName: process.env.DB_NAME,
