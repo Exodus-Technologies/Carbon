@@ -62,10 +62,6 @@ Carbon utilizes dotenv[https://github.com/motdotla/dotenv] for environment varia
 - API_KEY (Vonage API key)
 - API_SECRET (Vonage API Secret)
 
-# Authenication
-
-Carbon utilizes opentok-jwt[https://www.npmjs.com/package/opentok-jwt] for creating and validation JWT tokens.
-
 # API Definition
 
 Carbon utilizes Swagger and OpenAPI 3.0.3 Specification [https://swagger.io/specification/] for
