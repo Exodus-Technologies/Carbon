@@ -1,7 +1,7 @@
 {
   "name": "carbon",
   "version": "1.0.0",
-  "description": "Microservice for all interactions for login, signup of users and verifying JWT tokens for Sheen magazine(Authentication Manager)",
+  "description": "Microservice for all interactions for login, signup of users and verifying JWT tokens for Sheen magazine (Authentication Manager)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
