@@ -1,5 +1,6 @@
 'use strict';
 
+import bcrypt from 'bcrypt';
 import { validationResult } from '../validations';
 import config from '../config';
 
@@ -33,4 +34,15 @@ const generateDBUri = () => {
   return `mongodb+srv://${dbUser}:${dbPass}@${clusterName}.ybdno.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 };
 
-export { requestResponse, errorHandler, validationHandler, generateDBUri };
+//Create method to compare a given password with the database hash
+const comparePassword = (candidatePassword, password) => {
+  return bcrypt.compareSync(candidatePassword, password);
+};
+
+export {
+  requestResponse,
+  errorHandler,
+  validationHandler,
+  generateDBUri,
+  comparePassword
+};
