@@ -3,22 +3,23 @@
 /**
  * https://gist.github.com/AKIRA-MIYAKE/03b9ae80dbdf61bf28ef
  */
-
 import fs from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
-import { generateDBUri } from '../utils';
+import config from '../config';
+
+const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
+
+const uri = `mongodb+srv://${dbUser}:${dbPass}@${clusterName}.ybdno.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 const basename = path.basename(__filename);
-
-const uri = generateDBUri();
 
 const models = {};
 
 /**
  * Set event listener to mongoose.connection
  */
-mongoose.connection.on('error', (error) => {
+mongoose.connection.on('error', error => {
   console.log(error);
 });
 
@@ -30,11 +31,11 @@ mongoose.connection.on('open', () => {
  * Assign models to 'models' object
  */
 fs.readdirSync(__dirname)
-  .filter((filename) => {
+  .filter(filename => {
     // Get file's name that lives in the same directory without myself.
     return filename.indexOf('.') !== 0 && filename !== basename;
   })
-  .forEach((filename) => {
+  .forEach(filename => {
     // If file's extension is not 'js', break.
     if (filename.slice(-3) !== '.js') return;
 

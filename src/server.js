@@ -9,7 +9,7 @@ import cors from 'cors';
 import responseTime from 'response-time';
 
 import { requestResponse, errorHandler } from './utils';
-import { appRouter, tokenRouter } from './routes';
+import { appRouter, authRouter } from './routes';
 
 // Create the Express application object
 const server = express();
@@ -55,7 +55,7 @@ server.use(appRouter);
 console.log('Loaded server routes middleware.');
 
 //Vonage token router
-server.use(tokenRouter);
-console.log('Loaded server routes middleware.');
+server.use(authRouter);
+console.log('Loaded auth routes middleware.');
 
 export default http.createServer(server);

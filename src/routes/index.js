@@ -1,6 +1,6 @@
 'use strict';
 
 import appRouter from './appRouter';
-import tokenRouter from './tokenRouter';
+import authRouter from './authRouter';
 
-export { appRouter, tokenRouter };
+export { appRouter, authRouter };

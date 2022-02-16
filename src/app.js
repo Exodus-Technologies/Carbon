@@ -43,10 +43,10 @@ const init = async () => {
 init();
 
 process
-  .on('unhandledRejection', (reason) => {
+  .on('unhandledRejection', reason => {
     console.log(`Unhandled rejection, reason: ${reason.stack} `);
   })
-  .on('uncaughtException', (err) => {
+  .on('uncaughtException', err => {
     console.log(err, 'Uncaught exception thrown.');
     process.exit(1);
   })
@@ -55,7 +55,7 @@ process
      * Close connection to db
      */
     const { source } = models;
-    source.disconnect().catch((err) => {
+    source.disconnect().catch(err => {
       process.exit(err ? 1 : 0);
     });
     console.log('Disconnecting from database and shutting down application.');

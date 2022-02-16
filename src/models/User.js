@@ -3,11 +3,12 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import config from '../config';
+import { ROLES } from '../constants';
 
 const { Schema } = mongoose;
-const { NODE_ENV } = config;
+const { NODE_ENV, HASH_SALT } = config;
 
-const saltRounds = 10;
+const saltRounds = Number(HASH_SALT);
 
 //USER SCHEMA
 //  ============================================
@@ -17,18 +18,25 @@ const userSchema = new Schema(
       type: String,
       lowercase: true,
       required: true,
+      unique: true,
       match: /\S+@\S+\.\S+/,
       index: true
     },
-    password: { type: String, required: true, select: false },
+    password: { type: String, required: true },
     firstName: { type: String, required: true },
-    lastName: { type: String, required: true }
+    lastName: { type: String, required: true },
+    role: {
+      type: String,
+      required: true,
+      enum: ROLES,
+      default: 'subscriber'
+    }
   },
   { timestamps: true }
 );
 
 //HASH PASSWORD
-//  ============================================
+// ============================================
 
 //Hash password before saving
 userSchema.pre('save', function (next) {
@@ -38,14 +46,10 @@ userSchema.pre('save', function (next) {
   if (!user.isModified('password')) return next();
 
   //Generate Salt
-  bcrypt.genSalt(saltRounds, function (_, salt) {
-    bcrypt.hash(user.password, salt, null, function (err, hash) {
-      if (err) return next(err);
-      //Change the password to the hash version
-      user.password = hash;
-      next();
-    });
-  });
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(user.password, salt);
+  user.password = hash;
+  next();
 });
 
 //Create method to compare a given password with the database hash

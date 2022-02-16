@@ -2,5 +2,6 @@
 
 import UserController from './UserContoller';
 import TokenController from './TokenController';
+import AuthController from './AuthController';
 
-export { UserController, TokenController };
+export { UserController, TokenController, AuthController };
