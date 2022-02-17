@@ -9,9 +9,9 @@ import { generateDBUri } from './utils';
  * Start web server
  */
 const initServer = async () => {
-  const { PORT } = config;
+  const { PORT, HOST } = config;
   try {
-    await server.listen(PORT);
+    await server.listen(PORT, HOST);
     console.log(`Server listening on port: ${PORT}`);
   } catch (err) {
     console.log(`Server started with error: ${err}`);

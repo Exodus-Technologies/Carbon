@@ -26,18 +26,18 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: [path.join(__dirname, `./definitions/*.yml`)]
+  apis: [path.join(__dirname, './definitions/*.yml')]
 };
 
 const openApiSpecification = swaggerJsdoc(options);
 
 router.use(
-  '/user-service/swagger/docs',
+  '/auth-service/swagger/docs',
   swaggerUi.serve,
   swaggerUi.setup(openApiSpecification, { explorer: true })
 );
 
-router.get('/user-service/swagger/swagger.json', (_, res) => {
+router.get('/auth-service/swagger/swagger.json', (_, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(openApiSpecification);
 });
