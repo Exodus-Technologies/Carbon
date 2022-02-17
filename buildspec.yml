@@ -1,4 +1,9 @@
-version: 0.1
+version: 0.2
+
+env:
+  parameter-store:
+    AWS_ACCESS_KEY_ID: '/codebuild/key-id'
+    AWS_SECRET_ACCESS_KEY: '/codebuild/key-secret'
 
 phases:
   pre_build:
@@ -14,7 +19,3 @@ phases:
     commands:
       - echo Pushing docker image
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.comm/$REPOSITORY_NAME:latest
-
-artifacts:
-  files:
-    - task-definition.template
