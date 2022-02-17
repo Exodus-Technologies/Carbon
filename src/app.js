@@ -40,7 +40,9 @@ const init = async () => {
   await initServer();
 };
 
-init();
+init().catch(err => {
+  console.log(`Error starting application: ${err}`);
+});
 
 process
   .on('unhandledRejection', reason => {
