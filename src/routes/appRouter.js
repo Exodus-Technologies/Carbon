@@ -18,7 +18,6 @@ router.get('/auth-service/probeCheck', (_, res) => {
     statusCode: 200,
     message: 'Carbon Auth Manager service up and running!'
   });
-  res.send('Carbon Auth Manager service up and running!').status(200);
 });
 
 export default router;
