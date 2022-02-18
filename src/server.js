@@ -9,7 +9,7 @@ import cors from 'cors';
 import responseTime from 'response-time';
 
 import { requestResponse, errorHandler } from './utils';
-import { appRouter, authRouter } from './routes';
+import { appRouter, authRouter, userRouter } from './routes';
 import swagger from './swagger';
 
 // Create the Express application object
@@ -18,7 +18,7 @@ const server = express();
 // specify a single subnet
 server.set('trust proxy', true);
 
-// Enabled cors
+//Cors middleware
 server.use(cors());
 console.log('CORS enabled.');
 
@@ -27,6 +27,7 @@ server.use(helmet());
 server.use(helmet.referrerPolicy());
 console.log('Loaded helmet middleware.');
 
+//No cache middleware
 server.use(noCache());
 console.log('Loaded no-cache middleware.');
 
@@ -43,11 +44,11 @@ console.log('Loaded body-parser middleware.');
 server.use(responseTime());
 console.log('Loaded response time middleware.');
 
-//error handler
+//error handler middleware
 server.use(errorHandler);
 console.log('Loaded error handler middleware.');
 
-//route handler with request/response
+//route middleware with request/response
 server.use(requestResponse);
 console.log('Loaded request/response middleware.');
 
@@ -55,9 +56,13 @@ console.log('Loaded request/response middleware.');
 server.use(appRouter);
 console.log('Loaded server routes middleware.');
 
-//Vonage token router
+//Auth middleware
 server.use(authRouter);
 console.log('Loaded auth routes middleware.');
+
+//User middleware
+server.use(userRouter);
+console.log('Loaded user routes middleware.');
 
 //Swagger middleware
 server.use(swagger);

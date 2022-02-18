@@ -5,6 +5,8 @@ import { badRequest } from '../codes';
 
 const { User } = models;
 
+const queryOps = { __v: 0, _id: 0 };
+
 exports.createUser = async payload => {
   const { email } = payload;
   try {
@@ -13,7 +15,7 @@ exports.createUser = async payload => {
       const user = new User(payload);
       await user.save();
       return {
-        statusCode: 200,
+        statusCode: 201,
         message: 'User created with success'
       };
     } else {
@@ -25,13 +27,19 @@ exports.createUser = async payload => {
   }
 };
 
-exports.updateUser = async payload => {
-  //   try {
-  //     const user = await User.findByIdAndUpdate(userId, payload, {
-  //       new: true
-  //     });
-  //     return user;
-  //   } catch (err) {
-  //     console.log(`Error updating user: ${userId}: `, err);
-  //   }
+exports.getUsers = async query => {
+  try {
+    const users = await User.find(query, queryOps);
+    if (users.length) {
+      return {
+        statusCode: 200,
+        items: users
+      };
+    } else {
+      return badRequest('No users found with selected query params.');
+    }
+  } catch (err) {
+    console.log('Error getting all users: ', err);
+    return badImplementationRequest('Error getting users.');
+  }
 };
