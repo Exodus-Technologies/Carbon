@@ -3,10 +3,8 @@
 /**
  * https://github.com/validatorjs/validator.js#validators
  */
-const { header, body, validationResult } = require('express-validator');
-import models from '../models';
+import { query, body, validationResult } from 'express-validator';
 
-const { User } = models;
 import { ROLES } from '../constants';
 
 const userCreationValidation = [
@@ -29,7 +27,6 @@ const userCreationValidation = [
       if (!ROLES.includes(role)) {
         throw new Error('Role submitted is not allowed for this field');
       }
-
       // Indicates the success of this synchronous custom validator
       return true;
     })
@@ -58,17 +55,36 @@ const userUpdateValidation = [
       if (!ROLES.includes(role)) {
         throw new Error('Roles submitted is not allowed for this field');
       }
-
       // Indicates the success of this synchronous custom validator
       return true;
     })
     .optional()
 ];
 
-const authorizationHeaderValidation = [
-  header('Authorization')
+const userQueryValidation = [
+  query('email')
     .isString()
-    .withMessage('Must provide a valid authorization token')
+    .matches(/\S+@\S+\.\S+/)
+    .withMessage('Must provide a existing email')
+    .optional(),
+  query('firstName')
+    .isString()
+    .withMessage('Must provide your first name')
+    .optional(),
+  query('lastName')
+    .isString()
+    .withMessage('Must provide your last name')
+    .optional(),
+  body('role')
+    .isString()
+    .custom(role => {
+      if (!ROLES.includes(role)) {
+        throw new Error('Role submitted is not allowed for this field');
+      }
+      // Indicates the success of this synchronous custom validator
+      return true;
+    })
+    .optional()
 ];
 
 const loginValidation = [
@@ -89,6 +105,6 @@ export {
   userCreationValidation,
   userUpdateValidation,
   validationResult,
-  authorizationHeaderValidation,
+  userQueryValidation,
   loginValidation
 };
