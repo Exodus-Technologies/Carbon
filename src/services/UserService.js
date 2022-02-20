@@ -1,7 +1,7 @@
 'use strict';
 
 import models from '../models';
-import { badRequest } from '../codes';
+import { badRequest, badImplementationRequest } from '../codes';
 
 const { User } = models;
 
