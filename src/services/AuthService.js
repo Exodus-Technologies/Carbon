@@ -33,3 +33,24 @@ exports.validateLogin = async (email, password) => {
     return badImplementationRequest('Error logging with credentials.');
   }
 };
+
+exports.changePassword = async (email, password) => {
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      user.password = password;
+      const updatedUser = await user.save();
+      if (updatedUser) {
+        return {
+          statusCode: 200,
+          message: 'Successful password update'
+        };
+      }
+      return badRequest('Error updating password.');
+    }
+    return badRequest('User does not exist.');
+  } catch (err) {
+    console.log(`Error updating password: `, err);
+    return badImplementationRequest('Error updating password.');
+  }
+};

@@ -16,6 +16,13 @@ router.post(
 );
 
 router.post(
+  '/auth-service/changePassword',
+  loginValidation,
+  validationHandler,
+  AuthController.changePassword
+);
+
+router.post(
   '/auth-service/signup',
   userCreationValidation,
   validationHandler,
