@@ -1,6 +1,6 @@
 # Carbon
 
-Microservice for all interactions for login, signup of users, and retrieving and updating user information for customers of Sheen magazine (Authentication Manager)
+Microservice for all interactions for login, signup of users, and retrieving/updating user information for customers of Sheen magazine (Authentication Manager).
 
 # Requirements
 
@@ -57,10 +57,11 @@ Carbon utilizes dotenv[https://github.com/motdotla/dotenv] for environment varia
 - NODE_ENV (node environment)
 - PORT (application port)
 - HOST (hostname for application)
-- MONGODB_URL (mongo db url for connection)
+- CLUSTER_NAME (mongo db clsuter name)
 - COLLECTION_NAME (collection name for users)
-- API_KEY (Vonage API key)
-- API_SECRET (Vonage API Secret)
+- DB_NAME (databse name)
+- DB_USER (databse user name)
+- DB_PASS (databse user password)
 
 # API Definition
 
@@ -84,6 +85,13 @@ See `package.json` for description of task.
 
     $ npm start
 
-# Deployment (Docker and Amazon Kubernetes or EKS)
+# Deployment (Docker and Amazon Container Service or EKS)
 
-Coming Soon...
+Carbon utilizes various services provides by AWS:
+
+- Route 53 (DNS)
+- EC2 (Load balancer, Target Groups, Security groups)
+- ECR (Docker container registry)
+- ECS (Container Services that handles autoscaling and destination of "tasks")
+
+See [host](http://services-exodustechnologies.com/auth-service/probeCheck) for more details and a test drive...
