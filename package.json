@@ -16,11 +16,9 @@
     "url": "git+https://github.com/Exodus-Technologies/Carbon.git"
   },
   "keywords": [
-    "nodejs, express, mongodb, mongoose",
-    "jwt",
-    "authentication"
+    "nodejs, express, mongodb, mongoose, babel, docker, aws"
   ],
-  "author": "Exodus Technologies LLC",
+  "author": "Exodus Technologies, LLC",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Exodus-Technologies/Carbon/issues"
