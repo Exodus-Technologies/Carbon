@@ -7,6 +7,7 @@ const config = {
   HOST: process.env.HOST,
   PORT: process.env.PORT,
   HASH_SALT: process.env.HASH_SALT,
+  PASSWORD: process.env.PASSWORD,
   sources: {
     database: {
       clusterName: process.env.CLUSTER_NAME,
