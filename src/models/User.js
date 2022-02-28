@@ -30,6 +30,10 @@ const userSchema = new Schema(
       required: true,
       enum: ROLES,
       default: 'subscriber'
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }

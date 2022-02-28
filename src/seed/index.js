@@ -12,14 +12,16 @@ const users = [
     password: PASSWORD,
     firstName: 'John',
     lastName: 'Doe',
-    role: 'publisher'
+    role: 'publisher',
+    isAdmin: true
   },
   {
     email: 'moderator@sheenmagazine.com',
     password: PASSWORD,
     firstName: 'Jane',
     lastName: 'Doe',
-    role: 'moderator'
+    role: 'moderator',
+    isAdmin: true
   },
   {
     email: 'subscriber@sheenmagazine.com',
