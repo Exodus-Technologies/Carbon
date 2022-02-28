@@ -1,6 +1,6 @@
 # Carbon
 
-Microservice for all interactions for login, signup of users and verifying JWT tokens for Sheen magazine(Authentication Manager)
+Microservice for all interactions for login, signup of users, and retrieving and updating user information for customers of Sheen magazine (Authentication Manager)
 
 # Requirements
 
