@@ -30,6 +30,7 @@ const userCreationValidation = [
       // Indicates the success of this synchronous custom validator
       return true;
     })
+    .optional()
 ];
 
 const userUpdateValidation = [
@@ -62,6 +63,11 @@ const userUpdateValidation = [
 ];
 
 const userQueryValidation = [
+  query('limit')
+    .isString()
+    .not()
+    .isEmpty()
+    .withMessage('Must provide a limit for users'),
   query('email')
     .isString()
     .matches(/\S+@\S+\.\S+/)
