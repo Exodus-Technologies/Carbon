@@ -67,7 +67,9 @@ const userQueryValidation = [
     .isString()
     .not()
     .isEmpty()
-    .withMessage('Must provide a limit for users'),
+    .withMessage('Must provide a limit for users')
+    .optional()
+    .default(30),
   query('email')
     .isString()
     .matches(/\S+@\S+\.\S+/)
