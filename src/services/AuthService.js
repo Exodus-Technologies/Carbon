@@ -1,7 +1,7 @@
 'use strict';
 
 import models from '../models';
-import { badImplementationRequest, badRequest } from '../codes';
+import { badImplementationRequest, badRequest } from '../response-codes';
 
 const { User } = models;
 
@@ -14,16 +14,18 @@ exports.validateLogin = async (email, password) => {
       const validPassword = user.comparePassword(password);
       if (validPassword) {
         const { firstName, lastName, email, role } = user;
-        return {
-          statusCode: 200,
-          message: 'Successful login',
-          user: {
-            email,
-            role,
-            firstName,
-            lastName
+        return [
+          200,
+          {
+            message: 'Successful login',
+            user: {
+              email,
+              role,
+              firstName,
+              lastName
+            }
           }
-        };
+        ];
       }
       return badRequest('Incorrect credentials used for login.');
     }
@@ -41,10 +43,12 @@ exports.changePassword = async (email, password) => {
       user.password = password;
       const updatedUser = await user.save();
       if (updatedUser) {
-        return {
-          statusCode: 200,
-          message: 'Successful password update'
-        };
+        return [
+          200,
+          {
+            message: 'Successful password update.'
+          }
+        ];
       }
       return badRequest('Error updating password.');
     }
