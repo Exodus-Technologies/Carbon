@@ -85,7 +85,7 @@ See `package.json` for description of task.
 
     $ npm start
 
-# Deployment (Docker and Amazon Container Service or EKS)
+# Deployment (Docker and Amazon Container Service or ECS)
 
 Carbon utilizes various services provides by AWS:
 
