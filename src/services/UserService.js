@@ -14,7 +14,7 @@ exports.getUsers = async query => {
       return [
         200,
         {
-          statusCode: 200,
+          message: 'Fetcing of users action was successful.',
           items: users
         }
       ];
