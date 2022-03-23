@@ -50,9 +50,7 @@ exports.createUser = async payload => {
 
 exports.updateUser = async (userId, payload) => {
   try {
-    console.log(userId, payload);
     const updatedUser = await updateUser(userId, payload);
-    console.log(updateUser);
     if (updatedUser) {
       return [
         200,

@@ -42,7 +42,7 @@ export const updateUser = async (userId, payload) => {
   try {
     const { User } = models;
     const filter = { userId };
-    const options = { upsert: true, new: true };
+    const options = { new: true };
     const update = { ...payload };
     const updatedUser = await User.findOneAndUpdate(filter, update, options);
     return updatedUser;
