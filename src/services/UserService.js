@@ -56,7 +56,7 @@ exports.updateUser = async (userId, payload) => {
     if (updatedUser) {
       return [
         200,
-        { message: 'User was successfullu updated.', user: updatedUser }
+        { message: 'User was successfully updated.', user: updatedUser }
       ];
     }
     return badRequest(`No users found to update.`);
@@ -69,10 +69,8 @@ exports.updateUser = async (userId, payload) => {
 exports.deleteUser = async userId => {
   try {
     const user = await getUserById(userId);
-    console.log(user);
     if (user) {
       const deletedUser = await deleteUserById(userId);
-      console.log(deletedUser);
       if (deletedUser) {
         return [204];
       }
