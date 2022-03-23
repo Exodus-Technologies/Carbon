@@ -2,7 +2,6 @@
 
 import bcrypt from 'bcrypt';
 import { validationResult } from '../validations';
-import config from '../config';
 
 const requestResponse = (req, res, next) => {
   console.info(`${req.method} ${req.originalUrl}`);
@@ -29,20 +28,9 @@ const validationHandler = (req, res, next) => {
   next();
 };
 
-const generateDBUri = () => {
-  const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
-  return `mongodb+srv://${dbUser}:${dbPass}@${clusterName}.ybdno.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-};
-
 //Create method to compare a given password with the database hash
 const comparePassword = (candidatePassword, password) => {
   return bcrypt.compareSync(candidatePassword, password);
 };
 
-export {
-  requestResponse,
-  errorHandler,
-  validationHandler,
-  generateDBUri,
-  comparePassword
-};
+export { requestResponse, errorHandler, validationHandler, comparePassword };

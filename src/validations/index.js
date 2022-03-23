@@ -3,7 +3,7 @@
 /**
  * https://github.com/validatorjs/validator.js#validators
  */
-import { query, body, validationResult } from 'express-validator';
+import { query, body, validationResult, param } from 'express-validator';
 
 import { ROLES } from '../constants';
 
@@ -11,7 +11,7 @@ const userCreationValidation = [
   body('email')
     .isString()
     .matches(/\S+@\S+\.\S+/)
-    .withMessage('Must provide a existing and valid email'),
+    .withMessage('Must provide a existing and valid email.'),
   body('password')
     .isString()
     .isLength({ min: 8 })
@@ -19,13 +19,13 @@ const userCreationValidation = [
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     ),
-  body('firstName').isString().withMessage('Must provide your first name'),
-  body('lastName').isString().withMessage('Must provide your last name'),
+  body('firstName').isString().withMessage('Must provide your first name.'),
+  body('lastName').isString().withMessage('Must provide your last name.'),
   body('role')
     .isString()
     .custom(role => {
       if (!ROLES.includes(role)) {
-        throw new Error('Role submitted is not allowed for this field');
+        throw new Error('Role submitted is not allowed for this field.');
       }
       // Indicates the success of this synchronous custom validator
       return true;
@@ -34,6 +34,7 @@ const userCreationValidation = [
 ];
 
 const userUpdateValidation = [
+  param('userId').isString().withMessage('Must provide a valid userId.'),
   body('password')
     .isString()
     .isLength({ min: 8 })
@@ -44,17 +45,17 @@ const userUpdateValidation = [
     .optional(),
   body('firstName')
     .isString()
-    .withMessage('Must provide your first name')
+    .withMessage('Must provide your first name.')
     .optional(),
   body('lastName')
     .isString()
-    .withMessage('Must provide your last name')
+    .withMessage('Must provide your last name.')
     .optional(),
   body('role')
     .isString()
     .custom(role => {
       if (!ROLES.includes(role)) {
-        throw new Error('Roles submitted is not allowed for this field');
+        throw new Error('Roles submitted is not allowed for this field.');
       }
       // Indicates the success of this synchronous custom validator
       return true;
@@ -95,11 +96,15 @@ const userQueryValidation = [
     .optional()
 ];
 
+const userIdParamValidation = [
+  param('userId').isString().withMessage('Must provide a existing user id.')
+];
+
 const loginValidation = [
   body('email')
     .isString()
     .matches(/\S+@\S+\.\S+/)
-    .withMessage('Must provide a existing and valid email'),
+    .withMessage('Must provide a existing and valid email.'),
   body('password')
     .isString()
     .isLength({ min: 8 })
@@ -114,5 +119,6 @@ export {
   userUpdateValidation,
   validationResult,
   userQueryValidation,
-  loginValidation
+  loginValidation,
+  userIdParamValidation
 };

@@ -2,7 +2,12 @@
 
 import express from 'express';
 import { UserController } from '../controllers';
-import { userCreationValidation, userQueryValidation } from '../validations';
+import {
+  userCreationValidation,
+  userIdParamValidation,
+  userQueryValidation,
+  userUpdateValidation
+} from '../validations';
 import { validationHandler } from '../utils';
 
 const { Router } = express;
@@ -20,6 +25,20 @@ router.post(
   userCreationValidation,
   validationHandler,
   UserController.createUser
+);
+
+router.put(
+  '/auth-service/updateUser/:userId',
+  userUpdateValidation,
+  validationHandler,
+  UserController.updateUser
+);
+
+router.delete(
+  '/auth-service/deleteUser/:userId',
+  userIdParamValidation,
+  validationHandler,
+  UserController.deleteUser
 );
 
 export default router;
