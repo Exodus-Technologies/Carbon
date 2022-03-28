@@ -3,7 +3,7 @@
 import express from 'express';
 import { AuthController, UserController } from '../controllers';
 import { loginValidation, userCreationValidation } from '../validations';
-import { validationHandler } from '../utils';
+import { validationHandler } from '../middlewares';
 
 const { Router } = express;
 const router = Router();
