@@ -35,3 +35,14 @@ exports.updateUser = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.deleteUser = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const [statusCode] = await UserService.deleteUser(userId);
+    res.status(statusCode).end();
+  } catch (err) {
+    console.log(`Error deleting user: ${userId}: `, err);
+    next(err);
+  }
+};

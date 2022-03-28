@@ -1,15 +1,17 @@
 'use strict';
 
-import models from '../models';
 import { badRequest, badImplementationRequest } from '../response-codes';
-
-const { User } = models;
-
-const queryOps = { __v: 0, _id: 0, password: 0 };
+import {
+  getUsers,
+  saveUserRefToDB,
+  getUserById,
+  updateUser,
+  deleteUserById
+} from '../mongodb';
 
 exports.getUsers = async query => {
   try {
-    const users = await User.find(query, queryOps);
+    const users = await getUsers(query);
     if (users) {
       return [
         200,
@@ -28,12 +30,9 @@ exports.getUsers = async query => {
 };
 
 exports.createUser = async payload => {
-  const { email } = payload;
   try {
-    let user = await User.findOne({ email });
-    if (!user) {
-      const user = new User(payload);
-      await user.save();
+    const user = await saveUserRefToDB(payload);
+    if (user) {
       return [
         201,
         {
@@ -46,5 +45,37 @@ exports.createUser = async payload => {
   } catch (err) {
     console.log(`Error creating user: `, err);
     return badImplementationRequest('Error creating user.');
+  }
+};
+
+exports.updateUser = async (userId, payload) => {
+  try {
+    const updatedUser = await updateUser(userId, payload);
+    if (updatedUser) {
+      return [
+        200,
+        { message: 'User was successfully updated.', user: updatedUser }
+      ];
+    }
+    return badRequest(`No users found to update.`);
+  } catch (err) {
+    console.log('Error updating views on user: ', err);
+    return badImplementationRequest('Error updating user.');
+  }
+};
+
+exports.deleteUser = async userId => {
+  try {
+    const user = await getUserById(userId);
+    if (user) {
+      const deletedUser = await deleteUserById(userId);
+      if (deletedUser) {
+        return [204];
+      }
+    }
+    return badRequest(`No user found with id provided.`);
+  } catch (err) {
+    console.log('Error deleting user by id: ', err);
+    return badImplementationRequest('Error deleting user by id.');
   }
 };

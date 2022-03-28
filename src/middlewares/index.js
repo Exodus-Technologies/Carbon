@@ -1,8 +1,12 @@
 'use strict';
 
 import bcrypt from 'bcrypt';
+import NodeCache from 'node-cache';
 import { validationResult } from '../validations';
 import config from '../config';
+
+const nodeCache = new NodeCache();
+const { defaultCacheTtl } = config;
 
 const requestResponse = (req, res, next) => {
   console.info(`${req.method} ${req.originalUrl}`);
@@ -29,20 +33,33 @@ const validationHandler = (req, res, next) => {
   next();
 };
 
-const generateDBUri = () => {
-  const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
-  return `mongodb+srv://${dbUser}:${dbPass}@${clusterName}.ybdno.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-};
-
 //Create method to compare a given password with the database hash
 const comparePassword = (candidatePassword, password) => {
   return bcrypt.compareSync(candidatePassword, password);
+};
+
+const cache = () => {
+  return (req, res, next) => {
+    const key = `__express__${req.originalUrl || req.url}`;
+    const cachedBody = nodeCache.get(key);
+    if (cachedBody) {
+      res.send(JSON.parse(cachedBody));
+      return;
+    } else {
+      res.sendResponse = res.send;
+      res.send = body => {
+        nodeCache.set(key, body, defaultCacheTtl);
+        res.sendResponse(body);
+      };
+      next();
+    }
+  };
 };
 
 export {
   requestResponse,
   errorHandler,
   validationHandler,
-  generateDBUri,
-  comparePassword
+  comparePassword,
+  cache
 };

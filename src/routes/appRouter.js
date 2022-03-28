@@ -1,16 +1,17 @@
 'use strict';
 
 import express from 'express';
+import { cache } from '../middlewares';
 
 const { Router } = express;
 
 const router = Router();
 
-router.get('/auth-service/', (_, res) => {
+router.get('/auth-service/', cache(), (_, res) => {
   res.status(200).send({ message: 'Welcome to Carbon Auth Manager Service!' });
 });
 
-router.get('/auth-service/probeCheck', (_, res) => {
+router.get('/auth-service/probeCheck', cache(), (_, res) => {
   res
     .status(200)
     .send({ message: 'Carbon Auth Manager service up and running!' });

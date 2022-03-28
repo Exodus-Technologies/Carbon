@@ -33,13 +33,14 @@ const users = [
 ];
 
 const seedDB = async () => {
-  const defaultUser = await User.findOne({ email: users[0].email });
-  if (!defaultUser) {
+  const dbUsers = await User.find({});
+  if (!dbUsers.length) {
     users.forEach(async user => {
       const u = new User(user);
       await u.save();
     });
+    console.log('Database seeding complete...');
   }
 };
 
-module.exports = seedDB;
+export default seedDB;
