@@ -12,9 +12,19 @@ export const generateDBUri = () => {
 };
 
 export const getUsers = async query => {
-  const { User } = models;
-  const users = await User.find(query, queryOps);
-  return users;
+  try {
+    const { User } = models;
+    const page = parseInt(query.page);
+    const limit = parseInt(query.limit);
+    const skipIndex = (page - 1) * limit;
+    return await User.find({}, queryOps)
+      .sort({ _id: 1 })
+      .limit(limit)
+      .skip(skipIndex)
+      .exec();
+  } catch (err) {
+    console.log('Error getting user data to db: ', err);
+  }
 };
 
 export const getUserById = async userId => {

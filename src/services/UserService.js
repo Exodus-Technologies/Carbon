@@ -17,7 +17,7 @@ exports.getUsers = async query => {
         200,
         {
           message: 'Fetcing of users action was successful.',
-          items: users
+          users
         }
       ];
     } else {
