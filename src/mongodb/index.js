@@ -25,6 +25,7 @@ export const getUserById = async userId => {
 
 export const saveUserRefToDB = async payload => {
   try {
+    const { User } = models;
     const { email } = payload;
     let user = await User.findOne({ email });
     if (!user) {
