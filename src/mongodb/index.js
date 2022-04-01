@@ -17,7 +17,7 @@ export const getUsers = async query => {
     const page = parseInt(query.page);
     const limit = parseInt(query.limit);
     const skipIndex = (page - 1) * limit;
-    return await User.find({}, queryOps)
+    return await User.find(query, queryOps)
       .sort({ _id: 1 })
       .limit(limit)
       .skip(skipIndex)
