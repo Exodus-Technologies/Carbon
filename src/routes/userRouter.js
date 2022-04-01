@@ -8,7 +8,7 @@ import {
   userQueryValidation,
   userUpdateValidation
 } from '../validations';
-import { validationHandler, cache } from '../middlewares';
+import { validationHandler } from '../middlewares';
 
 const { Router } = express;
 const router = Router();
@@ -17,7 +17,6 @@ router.get(
   '/auth-service/getUsers',
   userQueryValidation,
   validationHandler,
-  cache(),
   UserController.getUsers
 );
 
