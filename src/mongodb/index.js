@@ -23,14 +23,18 @@ export const getUsers = async query => {
       .skip(skipIndex)
       .exec();
   } catch (err) {
-    console.log('Error getting user data to db: ', err);
+    console.log('Error getting user data from db: ', err);
   }
 };
 
 export const getUserById = async userId => {
-  const { User } = models;
-  const user = await User.findOne({ userId });
-  return user;
+  try {
+    const { User } = models;
+    const user = await User.findOne({ userId });
+    return user;
+  } catch (err) {
+    console.log('Error getting user data to db: ', err);
+  }
 };
 
 export const saveUserRefToDB = async payload => {
@@ -63,7 +67,11 @@ export const updateUser = async (userId, payload) => {
 };
 
 export const deleteUserById = async userId => {
-  const { User } = models;
-  const deletedUser = await User.deleteOne({ userId });
-  return deletedUser;
+  try {
+    const { User } = models;
+    const deletedUser = await User.deleteOne({ userId });
+    return deletedUser;
+  } catch (err) {
+    console.log('Error deleting user data from db: ', err);
+  }
 };
