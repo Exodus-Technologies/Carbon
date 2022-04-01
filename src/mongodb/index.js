@@ -12,15 +12,29 @@ export const generateDBUri = () => {
 };
 
 export const getUsers = async query => {
-  const { User } = models;
-  const users = await User.find(query, queryOps);
-  return users;
+  try {
+    const { User } = models;
+    const page = parseInt(query.page);
+    const limit = parseInt(query.limit);
+    const skipIndex = (page - 1) * limit;
+    return await User.find(query, queryOps)
+      .sort({ _id: 1 })
+      .limit(limit)
+      .skip(skipIndex)
+      .exec();
+  } catch (err) {
+    console.log('Error getting user data from db: ', err);
+  }
 };
 
 export const getUserById = async userId => {
-  const { User } = models;
-  const user = await User.findOne({ userId });
-  return user;
+  try {
+    const { User } = models;
+    const user = await User.findOne({ userId });
+    return user;
+  } catch (err) {
+    console.log('Error getting user data to db: ', err);
+  }
 };
 
 export const saveUserRefToDB = async payload => {
@@ -53,7 +67,11 @@ export const updateUser = async (userId, payload) => {
 };
 
 export const deleteUserById = async userId => {
-  const { User } = models;
-  const deletedUser = await User.deleteOne({ userId });
-  return deletedUser;
+  try {
+    const { User } = models;
+    const deletedUser = await User.deleteOne({ userId });
+    return deletedUser;
+  } catch (err) {
+    console.log('Error deleting user data from db: ', err);
+  }
 };

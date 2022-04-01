@@ -7,6 +7,33 @@ import { query, body, validationResult, param } from 'express-validator';
 
 import { ROLES } from '../constants';
 
+const userQueryValidation = [
+  query('page')
+    .isString()
+    .not()
+    .isEmpty()
+    .withMessage('Must provide a page for users'),
+  query('limit')
+    .isString()
+    .not()
+    .isEmpty()
+    .withMessage('Must provide a limit for users'),
+  query('email')
+    .isString()
+    .matches(/\S+@\S+\.\S+/)
+    .withMessage('Must provide a existing email')
+    .optional(),
+  query('firstName')
+    .isString()
+    .withMessage('Must provide your first name')
+    .optional(),
+  query('lastName')
+    .isString()
+    .withMessage('Must provide your last name')
+    .optional(),
+  body('role').isString().optional()
+];
+
 const userCreationValidation = [
   body('email')
     .isString()
@@ -56,39 +83,6 @@ const userUpdateValidation = [
     .custom(role => {
       if (!ROLES.includes(role)) {
         throw new Error('Roles submitted is not allowed for this field.');
-      }
-      // Indicates the success of this synchronous custom validator
-      return true;
-    })
-    .optional()
-];
-
-const userQueryValidation = [
-  query('limit')
-    .isString()
-    .not()
-    .isEmpty()
-    .withMessage('Must provide a limit for users')
-    .optional()
-    .default(30),
-  query('email')
-    .isString()
-    .matches(/\S+@\S+\.\S+/)
-    .withMessage('Must provide a existing email')
-    .optional(),
-  query('firstName')
-    .isString()
-    .withMessage('Must provide your first name')
-    .optional(),
-  query('lastName')
-    .isString()
-    .withMessage('Must provide your last name')
-    .optional(),
-  body('role')
-    .isString()
-    .custom(role => {
-      if (!ROLES.includes(role)) {
-        throw new Error('Role submitted is not allowed for this field');
       }
       // Indicates the success of this synchronous custom validator
       return true;
