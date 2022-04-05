@@ -10,25 +10,35 @@ const users = [
   {
     email: 'publisher@sheenmagazine.com',
     password: PASSWORD,
-    firstName: 'John',
-    lastName: 'Doe',
+    fullName: 'Jon Doe',
+    gender: 'M',
+    city: 'Los Angeles',
+    state: 'CA',
+    zipCode: '90001',
     role: 'publisher',
     isAdmin: true
   },
   {
     email: 'moderator@sheenmagazine.com',
     password: PASSWORD,
-    firstName: 'Jane',
-    lastName: 'Doe',
+    fullName: 'Jane Doe',
+    gender: 'F',
+    city: 'Los Angeles',
+    state: 'CA',
+    zipCode: '90001',
     role: 'moderator',
     isAdmin: true
   },
   {
     email: 'subscriber@sheenmagazine.com',
     password: PASSWORD,
-    firstName: 'Mary',
-    lastName: 'Doe',
-    role: 'subscriber'
+    fullName: 'Mary Doe',
+    gender: 'F',
+    city: 'Los Angeles',
+    state: 'CA',
+    zipCode: '90001',
+    role: 'subscriber',
+    isAdmin: false
   }
 ];
 

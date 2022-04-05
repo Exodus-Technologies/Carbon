@@ -60,7 +60,19 @@ export const updateUser = async (userId, payload) => {
     const options = { new: true };
     const update = { ...payload };
     const updatedUser = await User.findOneAndUpdate(filter, update, options);
-    return updatedUser;
+    const { email, fullName, gender, city, state, zipCode, role, isAdmin } =
+      updatedUser;
+    const user = {
+      email,
+      fullName,
+      gender,
+      city,
+      state,
+      zipCode,
+      role,
+      isAdmin
+    };
+    return user;
   } catch (err) {
     console.log('Error updating user data to db: ', err);
   }

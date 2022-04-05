@@ -5,7 +5,7 @@
  */
 import { query, body, validationResult, param } from 'express-validator';
 
-import { ROLES } from '../constants';
+import { GENDERS, ROLES, STATES } from '../constants';
 
 const userQueryValidation = [
   query('page')
@@ -18,25 +18,17 @@ const userQueryValidation = [
     .not()
     .isEmpty()
     .withMessage('Must provide a limit for users'),
-  query('email')
-    .isString()
-    .matches(/\S+@\S+\.\S+/)
-    .withMessage('Must provide a existing email')
-    .optional(),
-  query('firstName')
-    .isString()
-    .withMessage('Must provide your first name')
-    .optional(),
-  query('lastName')
-    .isString()
-    .withMessage('Must provide your last name')
-    .optional(),
-  body('role').isString().optional()
+  query('role').isString().optional(),
+  query('gender').isString().optional(),
+  query('city').isString().optional(),
+  query('state').isString().optional(),
+  query('zipCode').isString().optional()
 ];
 
 const userCreationValidation = [
   body('email')
     .isString()
+    .isEmail()
     .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
   body('password')
@@ -46,8 +38,9 @@ const userCreationValidation = [
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     ),
-  body('firstName').isString().withMessage('Must provide your first name.'),
-  body('lastName').isString().withMessage('Must provide your last name.'),
+  body('fullName')
+    .isString()
+    .withMessage('Must provide your first and last name.'),
   body('role')
     .isString()
     .custom(role => {
@@ -57,11 +50,39 @@ const userCreationValidation = [
       // Indicates the success of this synchronous custom validator
       return true;
     })
-    .optional()
+    .optional(),
+  body('gender')
+    .isString()
+    .custom(gender => {
+      if (!GENDERS.includes(gender)) {
+        throw new Error('Gender submitted is not allowed for this field.');
+      }
+      // Indicates the success of this synchronous custom validator
+      return true;
+    }),
+  body('city')
+    .isString()
+    .withMessage('Must provide the city in which you stay.'),
+  body('state')
+    .isString()
+    .custom(state => {
+      if (!STATES.includes(state)) {
+        throw new Error('State submitted is not allowed for this field.');
+      }
+      // Indicates the success of this synchronous custom validator
+      return true;
+    }),
+  body('zipCode').isString().withMessage('Must provide your zip code.')
 ];
 
 const userUpdateValidation = [
   param('userId').isString().withMessage('Must provide a valid userId.'),
+  body('email')
+    .isString()
+    .isEmail()
+    .matches(/\S+@\S+\.\S+/)
+    .withMessage('Must provide a existing and valid email.')
+    .optional(),
   body('password')
     .isString()
     .isLength({ min: 8 })
@@ -70,23 +91,47 @@ const userUpdateValidation = [
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
     .optional(),
-  body('firstName')
+  body('fullName')
     .isString()
-    .withMessage('Must provide your first name.')
-    .optional(),
-  body('lastName')
-    .isString()
-    .withMessage('Must provide your last name.')
+    .withMessage('Must provide your first and last name.')
     .optional(),
   body('role')
     .isString()
     .custom(role => {
       if (!ROLES.includes(role)) {
-        throw new Error('Roles submitted is not allowed for this field.');
+        throw new Error('Role submitted is not allowed for this field.');
       }
       // Indicates the success of this synchronous custom validator
       return true;
     })
+    .optional(),
+  body('gender')
+    .isString()
+    .custom(gender => {
+      if (!GENDERS.includes(gender)) {
+        throw new Error('Gender submitted is not allowed for this field.');
+      }
+      // Indicates the success of this synchronous custom validator
+      return true;
+    })
+    .optional(),
+  body('city')
+    .isString()
+    .withMessage('Must provide the city in which you stay.')
+    .optional(),
+  body('state')
+    .isString()
+    .custom(state => {
+      if (!STATES.includes(state)) {
+        throw new Error('State submitted is not allowed for this field.');
+      }
+      // Indicates the success of this synchronous custom validator
+      return true;
+    })
+    .optional(),
+  body('zipCode')
+    .isString()
+    .withMessage('Must provide your zip code.')
     .optional()
 ];
 

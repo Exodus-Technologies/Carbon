@@ -13,16 +13,21 @@ exports.validateLogin = async (email, password) => {
     if (user) {
       const validPassword = user.comparePassword(password);
       if (validPassword) {
-        const { firstName, lastName, email, role } = user;
+        const { email, fullName, gender, city, state, zipCode, role, isAdmin } =
+          user;
         return [
           200,
           {
             message: 'Successful login',
             user: {
               email,
+              fullName,
+              gender,
+              city,
+              state,
+              zipCode,
               role,
-              firstName,
-              lastName
+              isAdmin
             }
           }
         ];
