@@ -23,7 +23,7 @@ router.post(
 );
 
 router.post(
-  '/auth-service/signup',
+  '/auth-service/signUp',
   userCreationValidation,
   validationHandler,
   UserController.createUser

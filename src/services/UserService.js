@@ -11,6 +11,7 @@ import {
 
 exports.getUsers = async query => {
   try {
+    console.log(query);
     const users = await getUsers(query);
     if (users) {
       return [

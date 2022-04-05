@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import mongooseSequence from 'mongoose-sequence';
 import config from '../config';
-import { ROLES } from '../constants';
+import { GENDERS, ROLES, STATES } from '../constants';
 
 const { Schema } = mongoose;
 const autoIncrement = mongooseSequence(mongoose);
@@ -25,8 +25,19 @@ const userSchema = new Schema(
       index: true
     },
     password: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    fullName: { type: String, required: true },
+    gender: {
+      type: String,
+      required: true,
+      enum: GENDERS
+    },
+    city: { type: String, required: true },
+    state: {
+      type: String,
+      required: true,
+      enum: STATES
+    },
+    zipCode: { type: String, required: true },
     role: {
       type: String,
       required: true,

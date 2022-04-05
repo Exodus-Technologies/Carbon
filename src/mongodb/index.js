@@ -27,6 +27,17 @@ export const getUsers = async query => {
   }
 };
 
+const u = {
+  email: 'blastor555@yopmail.com',
+  password: 'BlackFreedom2020!*',
+  fullName: 'Ivy Jones',
+  role: 'moderator',
+  gender: 'F',
+  city: 'Los Angeles',
+  state: 'CA',
+  zipCode: '90001'
+};
+
 export const getUserById = async userId => {
   try {
     const { User } = models;
@@ -60,7 +71,19 @@ export const updateUser = async (userId, payload) => {
     const options = { new: true };
     const update = { ...payload };
     const updatedUser = await User.findOneAndUpdate(filter, update, options);
-    return updatedUser;
+    const { email, fullName, gender, city, state, zipCode, role, isAdmin } =
+      updatedUser;
+    const user = {
+      email,
+      fullName,
+      gender,
+      city,
+      state,
+      zipCode,
+      role,
+      isAdmin
+    };
+    return user;
   } catch (err) {
     console.log('Error updating user data to db: ', err);
   }
