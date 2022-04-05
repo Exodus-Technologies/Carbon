@@ -27,17 +27,6 @@ export const getUsers = async query => {
   }
 };
 
-const u = {
-  email: 'blastor555@yopmail.com',
-  password: 'BlackFreedom2020!*',
-  fullName: 'Ivy Jones',
-  role: 'moderator',
-  gender: 'F',
-  city: 'Los Angeles',
-  state: 'CA',
-  zipCode: '90001'
-};
-
 export const getUserById = async userId => {
   try {
     const { User } = models;
