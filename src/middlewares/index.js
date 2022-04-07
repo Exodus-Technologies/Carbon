@@ -1,6 +1,5 @@
 'use strict';
 
-import bcrypt from 'bcrypt';
 import NodeCache from 'node-cache';
 import { validationResult } from '../validations';
 import config from '../config';
@@ -33,11 +32,6 @@ const validationHandler = (req, res, next) => {
   next();
 };
 
-//Create method to compare a given password with the database hash
-const comparePassword = (candidatePassword, password) => {
-  return bcrypt.compareSync(candidatePassword, password);
-};
-
 const cache = () => {
   return (req, res, next) => {
     const key = `__express__${req.originalUrl || req.url}`;
@@ -56,10 +50,4 @@ const cache = () => {
   };
 };
 
-export {
-  requestResponse,
-  errorHandler,
-  validationHandler,
-  comparePassword,
-  cache
-};
+export { requestResponse, errorHandler, validationHandler, cache };
