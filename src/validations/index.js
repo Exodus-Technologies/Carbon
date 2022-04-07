@@ -19,10 +19,10 @@ const userQueryValidation = [
     .isEmpty()
     .withMessage('Must provide a limit for users'),
   query('role').isString().optional(),
-  query('gender').isString().optional(),
+  query('gender').isString().optional().isLength({ min: 1 }),
   query('city').isString().optional(),
-  query('state').isString().optional(),
-  query('zipCode').isString().optional()
+  query('state').isString().optional().isLength({ min: 2 }),
+  query('zipCode').isString().optional().isLength({ min: 5 })
 ];
 
 const userCreationValidation = [
@@ -59,7 +59,8 @@ const userCreationValidation = [
       }
       // Indicates the success of this synchronous custom validator
       return true;
-    }),
+    })
+    .isLength({ min: 1 }),
   body('city')
     .isString()
     .withMessage('Must provide the city in which you stay.'),
@@ -71,8 +72,12 @@ const userCreationValidation = [
       }
       // Indicates the success of this synchronous custom validator
       return true;
-    }),
-  body('zipCode').isString().withMessage('Must provide your zip code.')
+    })
+    .isLength({ min: 2 }),
+  body('zipCode')
+    .isString()
+    .withMessage('Must provide your zip code.')
+    .isLength({ min: 5 })
 ];
 
 const userUpdateValidation = [
@@ -114,6 +119,7 @@ const userUpdateValidation = [
       // Indicates the success of this synchronous custom validator
       return true;
     })
+    .isLength({ min: 1 })
     .optional(),
   body('city')
     .isString()
@@ -128,10 +134,12 @@ const userUpdateValidation = [
       // Indicates the success of this synchronous custom validator
       return true;
     })
+    .isLength({ min: 2 })
     .optional(),
   body('zipCode')
     .isString()
     .withMessage('Must provide your zip code.')
+    .isLength({ min: 5 })
     .optional()
 ];
 
