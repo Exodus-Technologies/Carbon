@@ -51,14 +51,14 @@ exports.createUser = async payload => {
 
 exports.updateUser = async (userId, payload) => {
   try {
-    const updatedUser = await updateUser(userId, payload);
+    const [error, updatedUser] = await updateUser(userId, payload);
     if (updatedUser) {
       return [
         200,
         { message: 'User was successfully updated.', user: updatedUser }
       ];
     }
-    return badRequest(`No users found to update.`);
+    return badRequest(error.message);
   } catch (err) {
     console.log('Error updating views on user: ', err);
     return badImplementationRequest('Error updating user.');
