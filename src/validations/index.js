@@ -82,12 +82,6 @@ const userCreationValidation = [
 
 const userUpdateValidation = [
   param('userId').isString().withMessage('Must provide a valid userId.'),
-  body('email')
-    .isString()
-    .isEmail()
-    .matches(/\S+@\S+\.\S+/)
-    .withMessage('Must provide a existing and valid email.')
-    .optional(),
   body('password')
     .isString()
     .isLength({ min: 8 })

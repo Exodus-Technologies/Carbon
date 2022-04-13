@@ -56,23 +56,32 @@ export const saveUserRefToDB = async payload => {
 export const updateUser = async (userId, payload) => {
   try {
     const { User } = models;
+    const { email } = payload;
+    //TODO: Find a way to update emails
+    if (email) {
+      return [Error('Unable to change email.')];
+    }
     const filter = { userId };
     const options = { new: true };
     const update = { ...payload };
     const updatedUser = await User.findOneAndUpdate(filter, update, options);
-    const { email, fullName, gender, city, state, zipCode, role, isAdmin } =
-      updatedUser;
-    const user = {
-      email,
-      fullName,
-      gender,
-      city,
-      state,
-      zipCode,
-      role,
-      isAdmin
-    };
-    return user;
+    if (updatedUser) {
+      const { email, fullName, gender, city, state, zipCode, role, isAdmin } =
+        updatedUser;
+      const user = {
+        email,
+        fullName,
+        gender,
+        city,
+        state,
+        zipCode,
+        role,
+        isAdmin
+      };
+      return [null, user];
+    } else {
+      return [Error('Unable to update user details.')];
+    }
   } catch (err) {
     console.log('Error updating user data to db: ', err);
   }
