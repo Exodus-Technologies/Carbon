@@ -44,10 +44,7 @@ const users = [
 
 const seedDB = async () => {
   const dbUsers = await User.find({});
-  const seededUser = dbUsers.find(dbuser => {
-    users[0].email === dbuser.email;
-  });
-  if (!seededUser) {
+  if (!dbUsers.length) {
     users.forEach(async user => {
       const u = new User(user);
       await u.save();
