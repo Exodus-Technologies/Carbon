@@ -11,7 +11,6 @@ import {
 
 exports.getUsers = async query => {
   try {
-    console.log(query);
     const users = await getUsers(query);
     if (users) {
       return [
@@ -32,7 +31,7 @@ exports.getUsers = async query => {
 
 exports.createUser = async payload => {
   try {
-    const user = await saveUserRefToDB(payload);
+    const [error, user] = await saveUserRefToDB(payload);
     if (user) {
       return [
         201,
@@ -41,7 +40,7 @@ exports.createUser = async payload => {
         }
       ];
     } else {
-      return badRequest('User already exists.');
+      return badRequest(error.message);
     }
   } catch (err) {
     console.log(`Error creating user: `, err);

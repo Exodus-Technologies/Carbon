@@ -41,13 +41,14 @@ export const saveUserRefToDB = async payload => {
   try {
     const { User } = models;
     const { email } = payload;
-    let user = await User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       const { User } = models;
       const user = new User(payload);
       const createdUser = await user.save();
-      return createdUser;
+      return [null, createdUser];
     }
+    return [Error('User with email already exists.')];
   } catch (err) {
     console.log('Error saving user data to db: ', err);
   }
