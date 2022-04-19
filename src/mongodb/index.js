@@ -5,7 +5,14 @@ import models from '../models';
 
 const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
 
-const queryOps = { __v: 0, _id: 0 };
+const queryOps = {
+  __v: 0,
+  _id: 0,
+  password: 0,
+  userId: 0,
+  createdAt: 0,
+  updatedAt: 0
+};
 
 export const generateDBUri = () => {
   return `mongodb+srv://${dbUser}:${dbPass}@${clusterName}.ybdno.mongodb.net/${dbName}?retryWrites=true&w=majority`;
