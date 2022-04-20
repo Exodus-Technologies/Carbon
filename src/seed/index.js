@@ -15,7 +15,6 @@ const users = [
     city: 'Los Angeles',
     state: 'CA',
     zipCode: '90001',
-    role: 'publisher',
     isAdmin: true
   },
   {
@@ -26,7 +25,6 @@ const users = [
     city: 'Los Angeles',
     state: 'CA',
     zipCode: '90001',
-    role: 'moderator',
     isAdmin: true
   },
   {
@@ -37,7 +35,6 @@ const users = [
     city: 'Los Angeles',
     state: 'CA',
     zipCode: '90001',
-    role: 'subscriber',
     isAdmin: false
   }
 ];
