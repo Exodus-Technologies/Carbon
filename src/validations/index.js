@@ -5,7 +5,7 @@
  */
 import { query, body, validationResult, param } from 'express-validator';
 
-import { GENDERS, ROLES, STATES } from '../constants';
+import { GENDERS, STATES } from '../constants';
 
 const userQueryValidation = [
   query('page')
@@ -18,7 +18,6 @@ const userQueryValidation = [
     .not()
     .isEmpty()
     .withMessage('Must provide a limit for users'),
-  query('role').isString().optional(),
   query('gender').isString().optional().isLength({ min: 1 }),
   query('city').isString().optional(),
   query('state').isString().optional().isLength({ min: 2 }),
@@ -41,16 +40,6 @@ const userCreationValidation = [
   body('fullName')
     .isString()
     .withMessage('Must provide your first and last name.'),
-  body('role')
-    .isString()
-    .custom(role => {
-      if (!ROLES.includes(role)) {
-        throw new Error('Role submitted is not allowed for this field.');
-      }
-      // Indicates the success of this synchronous custom validator
-      return true;
-    })
-    .optional(),
   body('gender')
     .isString()
     .custom(gender => {
@@ -93,16 +82,6 @@ const userUpdateValidation = [
   body('fullName')
     .isString()
     .withMessage('Must provide your first and last name.')
-    .optional(),
-  body('role')
-    .isString()
-    .custom(role => {
-      if (!ROLES.includes(role)) {
-        throw new Error('Role submitted is not allowed for this field.');
-      }
-      // Indicates the success of this synchronous custom validator
-      return true;
-    })
     .optional(),
   body('gender')
     .isString()

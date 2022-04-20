@@ -1,7 +1,5 @@
 'use strict';
 
-export const ROLES = ['publisher', 'moderator', 'subscriber'];
-
 export const GENDERS = ['M', 'F'];
 
 export const STATES = [
