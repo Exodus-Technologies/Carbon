@@ -13,7 +13,16 @@ exports.validateLogin = async (email, password) => {
     if (user) {
       const validPassword = user.comparePassword(password);
       if (validPassword) {
-        const { email, fullName, gender, city, state, zipCode, isAdmin } = user;
+        const {
+          email,
+          fullName,
+          gender,
+          city,
+          state,
+          zipCode,
+          isAdmin,
+          userId
+        } = user;
         return [
           200,
           {
@@ -25,6 +34,7 @@ exports.validateLogin = async (email, password) => {
               city,
               state,
               zipCode,
+              userId,
               isAdmin
             }
           }
