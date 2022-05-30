@@ -29,3 +29,17 @@ exports.changePassword = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.requestPasswordReset = async (req, res, next) => {
+  try {
+    const { body } = req;
+    const [statusCode, response] = await AuthService.requestPasswordReset(body);
+    res.status(statusCode).send(response);
+  } catch (err) {
+    console.log(
+      `Error password reset requesting for user: ${req.body.email}: `,
+      err
+    );
+    next(err);
+  }
+};

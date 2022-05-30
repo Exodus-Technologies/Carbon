@@ -2,6 +2,7 @@
 
 import config from '../config';
 import models from '../models';
+import { generateToken } from '../utils/TokenGenerator';
 
 const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
 
@@ -98,6 +99,26 @@ export const deleteUserById = async userId => {
     const { User } = models;
     const deletedUser = await User.deleteOne({ userId });
     return deletedUser;
+  } catch (err) {
+    console.log('Error deleting user data from db: ', err);
+  }
+};
+
+export const updateUserResetPassword = async ({ email }) => {
+  try {
+    const { User } = models;
+    const user = await User.findOne({ email });
+    if (!user) throw new Error('User not found!');
+    user.requestResetPassword = {
+      code: generateToken(),
+      expiredAt: new Date(
+        new Date().getTime() +
+          Number(config.requestResetPasswordCodeExpireInMinutes) * 60 * 1000
+      )
+    };
+    await user.save();
+
+    return [null, user];
   } catch (err) {
     console.log('Error deleting user data from db: ', err);
   }

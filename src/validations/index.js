@@ -134,11 +134,20 @@ const loginValidation = [
     )
 ];
 
+const userEmailParamValidation = [
+  body('email')
+    .isString()
+    .isEmail()
+    .matches(/\S+@\S+\.\S+/)
+    .withMessage('Must provide a existing and valid email.')
+];
+
 export {
   userCreationValidation,
   userUpdateValidation,
   validationResult,
   userQueryValidation,
   loginValidation,
-  userIdParamValidation
+  userIdParamValidation,
+  userEmailParamValidation
 };

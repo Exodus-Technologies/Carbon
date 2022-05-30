@@ -41,6 +41,10 @@ const userSchema = new Schema(
     isAdmin: {
       type: Boolean,
       default: false
+    },
+    requestResetPassword: {
+      code: String,
+      expiredAt: Date
     }
   },
   { timestamps: true }
