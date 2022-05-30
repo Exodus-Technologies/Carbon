@@ -52,17 +52,27 @@ exports.validateLogin = async (email, password) => {
   }
 };
 
-exports.changePassword = async (email, password) => {
+exports.changePassword = async (email, password, code) => {
   try {
     const user = await User.findOne({ email });
+    if (!user)
+      return badRequest('Email does not belong to any registered user.');
+
+    const { requestResetPassword } = user;
+    if (!requestResetPassword || code !== requestResetPassword.code)
+      return badRequest('The code is invalid');
+    if (new Date() > new Date(requestResetPassword.expiredAt))
+      return badRequest('The code is no longer valid');
+
     if (user) {
       user.password = password;
+      user.requestResetPassword = { ...requestResetPassword, code: '' };
       const updatedUser = await user.save();
       if (updatedUser) {
         return [
           200,
           {
-            message: 'Successful password update.'
+            message: 'Password reset success.'
           }
         ];
       }

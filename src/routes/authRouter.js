@@ -5,7 +5,8 @@ import { AuthController, UserController } from '../controllers';
 import {
   loginValidation,
   userCreationValidation,
-  userEmailParamValidation
+  userEmailParamValidation,
+  changePasswordValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
 
@@ -21,7 +22,7 @@ router.post(
 
 router.post(
   '/auth-service/changePassword',
-  loginValidation,
+  changePasswordValidation,
   validationHandler,
   AuthController.changePassword
 );

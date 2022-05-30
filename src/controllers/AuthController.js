@@ -18,10 +18,11 @@ exports.login = async (req, res, next) => {
 
 exports.changePassword = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, code } = req.body;
     const [statusCode, response] = await AuthService.changePassword(
       email,
-      password
+      password,
+      code
     );
     res.status(statusCode).send(response);
   } catch (err) {
