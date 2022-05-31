@@ -232,6 +232,37 @@ Example payload:
 }
 ```
 
+## Request password reset
+
+- This endpoint was created so that users can request a code send to their email to change password. The code contains 6 character and will be expire in 20 minutes. This is a POST API that returns 2 responses depending on the situation.
+
+[Change password Url](http://auth.services-exodustechnologies.com/auth-service/changePassword)
+
+Example payload:
+
+```
+{
+    email: "drobinson@sheen-magazine.com"
+}
+```
+
+1. Returns below for a user that exists and provided the correct password corresponding to that user:
+
+```
+{
+   message: 'Password reset success, an email has been sent to your email with the code to reset your password. The code is only valid for 20 minutes.'
+}
+```
+
+2. Returns below for a user that does not exist in our database:
+
+```
+{
+    error: "Bad Request",
+    message: "User not found."
+}
+```
+
 ## Get Users
 
 - This endpoint was created so that users that have been created and saved to our database can authenicate with our services. This is a GET API that returns 2 responses depending on the situation.

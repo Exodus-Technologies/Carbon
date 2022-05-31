@@ -86,6 +86,10 @@ exports.requestPasswordReset = async payload => {
   try {
     const [error, user] = await updateUserResetPassword(payload);
 
+    if (!user) {
+      return badRequest('Email does not belong to any registered user');
+    }
+
     const html = `
     <div>
       Dear ${user.fullName},<br><br>
@@ -100,16 +104,12 @@ exports.requestPasswordReset = async payload => {
       html
     );
 
-    if (user) {
-      return [
-        200,
-        {
-          message: `Password reset success, an email has been sent to your email with the code to reset your password. The code is only valid for ${config.requestResetPasswordCodeExpireInMinutes} minutes.`
-        }
-      ];
-    } else {
-      return badRequest(error.message);
-    }
+    return [
+      200,
+      {
+        message: `Password reset success, an email has been sent to your email with the code to reset your password. The code is only valid for ${config.requestResetPasswordCodeExpireInMinutes} minutes.`
+      }
+    ];
   } catch (err) {
     console.log(`Error password reset requesting: `, err);
     return badImplementationRequest('Error password reset requesting.');
