@@ -23,11 +23,39 @@ export const getUsers = async query => {
     const page = parseInt(query.page);
     const limit = parseInt(query.limit);
     const skipIndex = (page - 1) * limit;
-    return await User.find(query, queryOps)
-      .sort({ _id: 1 })
+
+    const filter = [];
+    for (const [key, value] of Object.entries(query)) {
+      if (key != 'page' && key != 'limit' && key != 'sort') {
+        filter.push({ [key]: { $regex: value, $options: 'i' } });
+      }
+    }
+
+    let objectFilter = {};
+    if (filter.length > 0) {
+      objectFilter = {
+        $and: filter
+      };
+    }
+
+    let sortString = '-id';
+
+    if (query.sort) {
+      sortString = query.sort;
+    }
+
+    const users = await User.find(objectFilter, queryOps)
       .limit(limit)
       .skip(skipIndex)
+      .sort(sortString)
+      .lean()
       .exec();
+    const total = await User.find(objectFilter, queryOps).count();
+    return users.map(user => ({
+      ...user,
+      total,
+      pages: Math.ceil(total / limit)
+    }));
   } catch (err) {
     console.log('Error getting user data from db: ', err);
   }
