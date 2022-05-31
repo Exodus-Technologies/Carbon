@@ -6,7 +6,8 @@ import {
   userCreationValidation,
   userIdParamValidation,
   userQueryValidation,
-  userUpdateValidation
+  userUpdateValidation,
+  userEmailParamValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
 

@@ -2,7 +2,12 @@
 
 import express from 'express';
 import { AuthController, UserController } from '../controllers';
-import { loginValidation, userCreationValidation } from '../validations';
+import {
+  loginValidation,
+  userCreationValidation,
+  userEmailParamValidation,
+  changePasswordValidation
+} from '../validations';
 import { validationHandler } from '../middlewares';
 
 const { Router } = express;
@@ -17,7 +22,7 @@ router.post(
 
 router.post(
   '/auth-service/changePassword',
-  loginValidation,
+  changePasswordValidation,
   validationHandler,
   AuthController.changePassword
 );
@@ -27,6 +32,13 @@ router.post(
   userCreationValidation,
   validationHandler,
   UserController.createUser
+);
+
+router.post(
+  '/auth-service/requestPasswordReset',
+  userEmailParamValidation,
+  validationHandler,
+  AuthController.requestPasswordReset
 );
 
 export default router;

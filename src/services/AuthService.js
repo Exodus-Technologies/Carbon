@@ -2,6 +2,9 @@
 
 import models from '../models';
 import { badImplementationRequest, badRequest } from '../response-codes';
+import { updateUserResetPassword } from '../mongodb';
+import config from '../config';
+import EmailHelper from '../utils/EmailHelper';
 
 const { User } = models;
 
@@ -49,25 +52,66 @@ exports.validateLogin = async (email, password) => {
   }
 };
 
-exports.changePassword = async (email, password) => {
+exports.changePassword = async (email, password, code) => {
   try {
     const user = await User.findOne({ email });
-    if (user) {
-      user.password = password;
-      const updatedUser = await user.save();
-      if (updatedUser) {
-        return [
-          200,
-          {
-            message: 'Successful password update.'
-          }
-        ];
-      }
-      return badRequest('Error updating password.');
+    if (!user)
+      return badRequest('Email does not belong to any registered user.');
+
+    const { requestResetPassword } = user;
+    if (!requestResetPassword || code !== requestResetPassword.code)
+      return badRequest('The code is invalid');
+    if (new Date() > new Date(requestResetPassword.expiredAt))
+      return badRequest('The code is no longer valid');
+
+    user.password = password;
+    user.requestResetPassword = { ...requestResetPassword, code: '' };
+    const updatedUser = await user.save();
+    if (updatedUser) {
+      return [
+        200,
+        {
+          message: 'Password reset success.'
+        }
+      ];
     }
-    return badRequest('User does not exist.');
+    return badRequest('Error updating password.');
   } catch (err) {
     console.log(`Error updating password: `, err);
     return badImplementationRequest('Error updating password.');
+  }
+};
+
+exports.requestPasswordReset = async payload => {
+  try {
+    const [error, user] = await updateUserResetPassword(payload);
+
+    const html = `
+    <div>
+      Dear ${user.fullName},<br><br>
+      Your reset password code is: <b>${user.requestResetPassword.code}</b>. The code is only valid for ${config.requestResetPasswordCodeExpireInMinutes} minutes.
+    </div>
+  `;
+
+    await EmailHelper.sendMail(
+      config.noreplyEmail,
+      user.email,
+      'Carbon password reset',
+      html
+    );
+
+    if (user) {
+      return [
+        200,
+        {
+          message: `Password reset success, an email has been sent to your email with the code to reset your password. The code is only valid for ${config.requestResetPasswordCodeExpireInMinutes} minutes.`
+        }
+      ];
+    } else {
+      return badRequest(error.message);
+    }
+  } catch (err) {
+    console.log(`Error password reset requesting: `, err);
+    return badImplementationRequest('Error password reset requesting.');
   }
 };

@@ -9,6 +9,10 @@ const config = {
   HASH_SALT: process.env.HASH_SALT,
   PASSWORD: process.env.PASSWORD,
   defaultCacheTtl: parseInt(process.env.DEFAULT_CACHE_TTL, 10),
+  sendgridKey: process.env.SENDGRID_KEY,
+  requestResetPasswordCodeExpireInMinutes:
+    process.env.REQUEST_RESET_PASSWORD_CODE_EXPIRE_IN_MINUTES,
+  noreplyEmail: process.env.NOREPLY_EMAIL,
   sources: {
     database: {
       clusterName: process.env.CLUSTER_NAME,
