@@ -27,8 +27,16 @@ export const getUsers = async query => {
 
     const filter = [];
     for (const [key, value] of Object.entries(query)) {
-      if (key != 'page' && key != 'limit' && key != 'sort') {
+      if (
+        key != 'page' &&
+        key != 'limit' &&
+        key != 'sort' &&
+        key != 'isAdmin'
+      ) {
         filter.push({ [key]: { $regex: value, $options: 'i' } });
+      }
+      if (key == 'isAdmin') {
+        filter.push({ [key]: value });
       }
     }
 
