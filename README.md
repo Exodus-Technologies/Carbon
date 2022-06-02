@@ -71,6 +71,7 @@ Carbon utilizes dotenv[https://github.com/motdotla/dotenv] for environment varia
 - APPLE_PRIVATE_KEY (Apple private key for jwt)
 - GOOGLE_CLIENT_EMAIL (Google client email for the service API)
 - GOOGLE_PRIVATE_KEY (Google private key for authentication)
+- PACKAGE_NAME (name of the package in the Google and Apple store)
 
 # API Definition
 

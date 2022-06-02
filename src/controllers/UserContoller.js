@@ -50,7 +50,7 @@ exports.deleteUser = async (req, res, next) => {
 
 exports.getSubscriptionProducts = async (req, res, next) => {
   try {
-    const { platform } = req.params;
+    const { platform } = req.query;
     const [statusCode, response] = await UserService.getSubscriptionProducts(
       platform
     );
