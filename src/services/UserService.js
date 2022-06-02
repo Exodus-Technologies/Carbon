@@ -81,6 +81,4 @@ exports.deleteUser = async userId => {
   }
 };
 
-exports.getSubscriptionProducts = async platform => {
-  '-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg2W2Cw9vEeXogiVXX\nyPWyXfBwWtHJh5Dk7yfatNJ87WagCgYIKoZIzj0DAQehRANCAAQZUe0trZqDYx0/\nG2qv/Xx3SSumWvpDBVSMz1i79AYWiykswhz541NdYv9OTtChzKyO5OC1TYtl+xyN\nqWL87UCr\n-----END PRIVATE KEY-----';
-};
+exports.getSubscriptionProducts = async platform => {};
