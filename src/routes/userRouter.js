@@ -42,4 +42,9 @@ router.delete(
   UserController.deleteUser
 );
 
+router.get(
+  '/auth-service/getSubscriptionProducts',
+  UserController.getSubscriptionProducts
+);
+
 export default router;

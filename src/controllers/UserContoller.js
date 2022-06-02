@@ -1,5 +1,6 @@
 'use strict';
 
+import { async } from 'regenerator-runtime';
 import { UserService } from '../services';
 
 exports.getUsers = async (req, res, next) => {
@@ -43,6 +44,18 @@ exports.deleteUser = async (req, res, next) => {
     res.status(statusCode).end();
   } catch (err) {
     console.log(`Error deleting user: ${userId}: `, err);
+    next(err);
+  }
+};
+
+exports.getSubscriptionProducts = async (req, res, next) => {
+  try {
+    const { platform } = req.params;
+    const [statusCode, response] = await UserService.getSubscriptionProducts(
+      platform
+    );
+    res.status(statusCode).send(response);
+  } catch (err) {
     next(err);
   }
 };

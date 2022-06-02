@@ -63,6 +63,14 @@ Carbon utilizes dotenv[https://github.com/motdotla/dotenv] for environment varia
 - DB_NAME (databse name)
 - DB_USER (databse user name)
 - DB_PASS (databse user password)
+- REQUEST_RESET_PASSWORD_CODE_EXPIRE_IN_MINUTES (time for when the reset password code expire)
+- SENDGRID_KEY (API key for SendGrid to send email)
+- NOREPLY_EMAIL (email used to send the email with SendGrid)
+- APPLE_ISSUER (Apple issuer for the products)
+- APPLE_KEY_ID (Apple key id)
+- APPLE_PRIVATE_KEY (Apple private key for jwt)
+- GOOGLE_CLIENT_EMAIL (Google client email for the service API)
+- GOOGLE_PRIVATE_KEY (Google private key for authentication)
 
 # API Definition
 
