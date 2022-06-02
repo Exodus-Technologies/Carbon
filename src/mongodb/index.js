@@ -31,11 +31,12 @@ export const getUsers = async query => {
         key != 'page' &&
         key != 'limit' &&
         key != 'sort' &&
-        key != 'isAdmin'
+        key != 'isAdmin' &&
+        key != 'userId'
       ) {
         filter.push({ [key]: { $regex: value, $options: 'i' } });
       }
-      if (key == 'isAdmin') {
+      if (key == 'isAdmin' || key == 'userId') {
         filter.push({ [key]: value });
       }
     }
@@ -59,6 +60,7 @@ export const getUsers = async query => {
       .sort(sortString)
       .lean()
       .exec();
+    console.log({ users });
     const total = await User.find(objectFilter, queryOps).count();
     return users.map(user => ({
       ...user,
