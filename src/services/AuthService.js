@@ -8,6 +8,9 @@ import EmailHelper from '../utils/EmailHelper';
 
 const { User } = models;
 
+const { requestResetPasswordCodeExpireInMinutes, noReplyEmail, sendGridKey } =
+  config.twilio;
+
 const queryOps = { __v: 0, _id: 0, createdAt: 0, updatedAt: 0 };
 
 exports.validateLogin = async (email, password) => {
@@ -89,12 +92,12 @@ exports.requestPasswordReset = async payload => {
     const html = `
     <div>
       Dear ${user.fullName},<br><br>
-      Your reset password code is: <b>${user.requestResetPassword.code}</b>. The code is only valid for ${config.requestResetPasswordCodeExpireInMinutes} minutes.
+      Your reset password code is: <b>${user.requestResetPassword.code}</b>. The code is only valid for ${requestResetPasswordCodeExpireInMinutes} minutes.
     </div>
   `;
 
     await EmailHelper.sendMail(
-      config.noreplyEmail,
+      noReplyEmail,
       user.email,
       'Carbon password reset',
       html
@@ -104,7 +107,7 @@ exports.requestPasswordReset = async payload => {
       return [
         200,
         {
-          message: `Password reset success, an email has been sent to your email with the code to reset your password. The code is only valid for ${config.requestResetPasswordCodeExpireInMinutes} minutes.`
+          message: `Password reset success, an email has been sent to your email with the code to reset your password. The code is only valid for ${requestResetPasswordCodeExpireInMinutes} minutes.`
         }
       ];
     } else {
