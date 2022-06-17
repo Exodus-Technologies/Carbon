@@ -158,7 +158,6 @@ export const updateUserResetPassword = async ({ email }) => {
 
     return [null, user];
   } catch (err) {
-    console.log('Error update user reset password: ', err);
-    return [err];
+    console.log('Error updating user data from db: ', err);
   }
 };

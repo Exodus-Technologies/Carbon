@@ -1,7 +1,9 @@
 import sgMail from '@sendgrid/mail';
 import config from '../config';
 
-sgMail.setApiKey(config.sendgridKey);
+const { sendGridKey } = config.twilio;
+
+sgMail.setApiKey(sendGridKey);
 
 const sendMail = (fromEmail, toEmails, subject, content) => {
   const msg = {
