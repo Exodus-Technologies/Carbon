@@ -120,6 +120,6 @@ export const updateUserResetPassword = async ({ email }) => {
 
     return [null, user];
   } catch (err) {
-    console.log('Error deleting user data from db: ', err);
+    console.log('Error updating user data from db: ', err);
   }
 };
