@@ -1,5 +1,10 @@
 'use strict';
 
+import { google } from 'googleapis';
+
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
 import { badRequest, badImplementationRequest } from '../response-codes';
 import {
   getUsers,
@@ -9,11 +14,7 @@ import {
   deleteUserById
 } from '../mongodb';
 import config from '../config';
-import moment from 'moment';
-import { sign } from 'jsonwebtoken';
-import { google } from 'googleapis';
-import { async } from 'regenerator-runtime';
-import axios from 'axios';
+import { generateAppleJwtToken } from '../utils/TokenGenerator';
 
 exports.getUsers = async query => {
   try {
@@ -99,103 +100,64 @@ exports.deleteUser = async userId => {
 };
 
 exports.getSubscriptionProducts = async platform => {
-  let response;
-  switch (platform) {
-    case 'android':
-      response = await AndroidGetAvailableSubscription();
-      break;
-    case 'ios':
-      response = await AppleGetAvailableSubscriptions();
-      break;
-    default:
-      response = [];
-      break;
+  let response = [];
+  if (platform === 'android') {
+    response = await getAvailableAndroidSubscriptions();
+  } else if (platform === 'ios') {
+    response = await getAvailableAppleSubscriptions();
   }
   return [200, response];
 };
 
-function ReturnPromiseResult(response) {
-  return new Promise((resolve, reject) => {
-    resolve(response.data);
-  });
-}
-
-function AppleJwtToken(callback = encoded => null) {
-  const {
-    subscription: {
-      apple: { issuer, keyId, privateKey }
-    }
-  } = config;
-
-  const expirationTime = moment().add(10, 'minute').valueOf() / 1000;
-  try {
-    const token = sign(
-      {
-        exp: Math.ceil(expirationTime)
-      },
-      privateKey,
-      {
-        issuer,
-        audience: 'appstoreconnect-v1',
-        algorithm: 'ES256',
-        header: {
-          alg: 'ES256',
-          kid: keyId,
-          typ: 'JWT'
-        }
-      }
-    );
-    return token;
-  } catch {
-    return undefined;
-  }
-}
-
-async function AppleGetAvailableSubscriptions() {
+async function getAvailableAppleSubscriptions() {
   const URL_APPLE_CONNECT_API = 'https://api.appstoreconnect.apple.com/v1';
-  let jwtToken = AppleJwtToken(encoded => (jwtToken = encoded));
-  if (!jwtToken) {
+  const appleJwtToken = generateAppleJwtToken();
+  if (!appleJwtToken) {
     return [];
   }
 
-  const axiosConfig = {
+  const config = {
     headers: {
-      Authorization: `Bearer ${jwtToken}`
+      Authorization: `Bearer ${appleJwtToken}`
     }
   };
+
   const urlApps = `${URL_APPLE_CONNECT_API}/apps?filter[name]=Sheen Magazine`;
-  const subscriptionAppleApps = await axios
-    .get(urlApps, axiosConfig)
-    .then(ReturnPromiseResult);
-  if (subscriptionAppleApps.data.length) {
-    const appId = subscriptionAppleApps.data[0].id;
+  const response = await fetch(urlApps, config);
+  const data = await response.json();
+
+  if (data.length) {
+    const { id: appId } = data[0];
 
     const urlInAppPurchaseProducts = `${URL_APPLE_CONNECT_API}/apps/${appId}/inAppPurchases?filter[inAppPurchaseType]=NON_CONSUMABLE`;
 
-    const subscriptionAppleInAppPurchaseProducts = await axios
-      .get(urlInAppPurchaseProducts, axiosConfig)
-      .then(ReturnPromiseResult);
-    return subscriptionAppleInAppPurchaseProducts.data.map(
-      ({ id, attributes }) => ({ id, type: attributes?.productId })
-    );
+    const response = await fetch(urlInAppPurchaseProducts, config);
+    const data = await response.json();
+
+    return data.map(({ id, attributes }) => ({
+      id,
+      type: attributes.productId
+    }));
   }
+
   return [];
 }
 
-async function AndroidGetAvailableSubscription() {
-  const {
-    subscription: {
-      android: { packageName, clientEmail, privateKey }
-    }
-  } = config;
-  let client = new google.auth.JWT(clientEmail, undefined, privateKey, [
+async function getAvailableAndroidSubscriptions() {
+  const { packageName, clientEmail, privateKey } = config.subscription.apple;
+
+  const client = new google.auth.JWT(clientEmail, undefined, privateKey, [
     'https://www.googleapis.com/auth/androidpublisher'
   ]);
+
   const androidApi = google.androidpublisher({ version: 'v3', auth: client });
+
   await client.authorize();
-  let response = await androidApi.inappproducts.list({ packageName });
-  let result = response.data.inappproduct?.map(({ sku }) => ({
-    id: sku ?? '',
+
+  const response = await androidApi.inappproducts.list({ packageName });
+
+  const result = response.data.inappproduct.map(({ sku }) => ({
+    id: sku || '',
     type: sku || undefined
   }));
   return result || [];

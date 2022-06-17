@@ -1,6 +1,5 @@
 'use strict';
 
-import { async } from 'regenerator-runtime';
 import { UserService } from '../services';
 
 exports.getUsers = async (req, res, next) => {

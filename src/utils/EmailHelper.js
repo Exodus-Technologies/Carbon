@@ -13,16 +13,7 @@ const sendMail = (fromEmail, toEmails, subject, content) => {
     html: content
   };
 
-  return new Promise((res, rej) => {
-    sgMail
-      .send(msg)
-      .then(() => {
-        res();
-      })
-      .catch(error => {
-        rej(error);
-      });
-  });
+  return sgMail.send(msg);
 };
 
 export default { sendMail };

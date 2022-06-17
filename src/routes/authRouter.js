@@ -4,9 +4,9 @@ import express from 'express';
 import { AuthController, UserController } from '../controllers';
 import {
   loginValidation,
-  userCreationValidation,
-  userEmailParamValidation,
-  changePasswordValidation
+  userCreationValidation
+  // userEmailParamValidation,
+  // changePasswordValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
 
@@ -21,24 +21,24 @@ router.post(
 );
 
 router.post(
-  '/auth-service/changePassword',
-  changePasswordValidation,
-  validationHandler,
-  AuthController.changePassword
-);
-
-router.post(
   '/auth-service/signUp',
   userCreationValidation,
   validationHandler,
   UserController.createUser
 );
 
-router.post(
-  '/auth-service/requestPasswordReset',
-  userEmailParamValidation,
-  validationHandler,
-  AuthController.requestPasswordReset
-);
+// router.post(
+//   '/auth-service/changePassword',
+//   changePasswordValidation,
+//   validationHandler,
+//   AuthController.changePassword
+// );
+
+// router.post(
+//   '/auth-service/requestPasswordReset',
+//   userEmailParamValidation,
+//   validationHandler,
+//   AuthController.requestPasswordReset
+// );
 
 export default router;

@@ -160,6 +160,10 @@ const userEmailParamValidation = [
     .withMessage('Must provide a existing and valid email.')
 ];
 
+const platfromQueryValidation = [
+  query('platform').isString().withMessage('Must provide a device platform.')
+];
+
 export {
   userCreationValidation,
   userUpdateValidation,
@@ -168,5 +172,6 @@ export {
   loginValidation,
   userIdParamValidation,
   userEmailParamValidation,
-  changePasswordValidation
+  changePasswordValidation,
+  platfromQueryValidation
 };
