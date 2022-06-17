@@ -27,6 +27,18 @@ const config = {
         useUnifiedTopology: true
       }
     }
+  },
+  subscription: {
+    android: {
+      packageName: process.env.PACKAGE_NAME,
+      clientEmail: process.env.GOOGLE_CLIENT_EMAIL,
+      privateKey: process.env.GOOGLE_PRIVATE_KEY
+    },
+    apple: {
+      issuer: process.env.APPLE_ISSUER,
+      keyId: process.env.APPLE_KEY_ID,
+      privateKey: process.env.APPLE_PRIVATE_KEY
+    }
   }
 };
 

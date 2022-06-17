@@ -89,6 +89,10 @@ exports.requestPasswordReset = async payload => {
   try {
     const [error, user] = await updateUserResetPassword(payload);
 
+    if (!user) {
+      return badRequest('Email does not belong to any registered user');
+    }
+
     const html = `
     <div>
       Dear ${user.fullName},<br><br>
