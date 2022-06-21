@@ -2,7 +2,7 @@
 
 import models from '../models';
 import { badImplementationRequest, badRequest } from '../response-codes';
-import { generateAuthJwtToken } from '../utils/TokenGenerator';
+import { generateAuthJwtToken } from '../utils/token';
 // import { updateUserResetPassword } from '../mongodb';
 // import config from '../config';
 // import EmailHelper from '../utils/EmailHelper';

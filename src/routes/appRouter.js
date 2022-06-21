@@ -2,6 +2,7 @@
 
 import express from 'express';
 import { cache } from '../middlewares';
+import { fancyTimeFormat } from '../utils/time';
 
 const { Router } = express;
 const { version } = require('../../package.json');
@@ -14,7 +15,7 @@ router.get('/auth-service/', cache(), (_, res) => {
 
 router.get('/auth-service/probeCheck', (_, res) => {
   res.status(200).send({
-    uptime: process.uptime(),
+    uptime: fancyTimeFormat(process.uptime()),
     date: new Date(),
     message: 'Carbon Auth Manager service up and running!',
     appVersion: version

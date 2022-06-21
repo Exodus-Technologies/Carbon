@@ -2,7 +2,7 @@
 
 import config from '../config';
 import models from '../models';
-import { generateToken } from '../utils/TokenGenerator';
+import { generateToken } from '../utils/token';
 
 const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
 

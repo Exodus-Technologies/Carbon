@@ -14,7 +14,7 @@ import {
   deleteUserById
 } from '../mongodb';
 import config from '../config';
-import { generateAppleJwtToken } from '../utils/TokenGenerator';
+import { generateAppleJwtToken } from '../utils/token';
 
 exports.getUsers = async query => {
   try {
