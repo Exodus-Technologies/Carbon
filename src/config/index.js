@@ -7,7 +7,7 @@ const config = {
   HOST: process.env.HOST,
   PORT: process.env.PORT,
   HASH_SALT: process.env.HASH_SALT,
-  PASSWORD: process.env.PASSWORD,
+  USER_PASSWORD: process.env.USER_PASSWORD,
   defaultCacheTtl: parseInt(process.env.DEFAULT_CACHE_TTL, 10),
   // twilio: {
   //   sendGridKey: process.env.SENDGRID_KEY,
@@ -27,19 +27,19 @@ const config = {
         useUnifiedTopology: true
       }
     }
-  },
-  subscription: {
-    android: {
-      packageName: process.env.PACKAGE_NAME,
-      clientEmail: process.env.GOOGLE_CLIENT_EMAIL,
-      privateKey: process.env.GOOGLE_PRIVATE_KEY
-    },
-    apple: {
-      issuer: process.env.APPLE_ISSUER,
-      keyId: process.env.APPLE_KEY_ID,
-      privateKey: process.env.APPLE_PRIVATE_KEY
-    }
   }
+  // subscription: {
+  //   android: {
+  //     packageName: process.env.PACKAGE_NAME,
+  //     clientEmail: process.env.GOOGLE_CLIENT_EMAIL,
+  //     privateKey: process.env.GOOGLE_PRIVATE_KEY
+  //   },
+  //   apple: {
+  //     issuer: process.env.APPLE_ISSUER,
+  //     keyId: process.env.APPLE_KEY_ID,
+  //     privateKey: process.env.APPLE_PRIVATE_KEY
+  //   }
+  // }
 };
 
 export default config;
