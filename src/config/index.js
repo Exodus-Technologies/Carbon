@@ -7,8 +7,8 @@ const config = {
   HOST: process.env.HOST,
   PORT: process.env.PORT,
   HASH_SALT: process.env.HASH_SALT,
-  PASSWORD: process.env.DB_PASS,
-  jwtSecret: process.env.PASSWORD,
+  PASSWORD: process.env.PASSWORD,
+  jwtSecret: process.env.DB_PASS,
   defaultCacheTtl: parseInt(process.env.DEFAULT_CACHE_TTL, 10),
   // twilio: {
   //   sendGridKey: process.env.SENDGRID_KEY,
