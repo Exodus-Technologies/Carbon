@@ -1,5 +1,10 @@
 import { customAlphabet } from 'nanoid';
+import jwt from 'jsonwebtoken';
+import moment from 'moment';
 import config from '../config';
+
+const { sign } = jwt;
+const { jwtSecret } = config;
 
 export const generateToken = (length = 6) => {
   const nanoid = customAlphabet(
@@ -7,6 +12,24 @@ export const generateToken = (length = 6) => {
     length
   );
   return nanoid();
+};
+
+export const generateAuthJwtToken = user => {
+  const { isAdmin, email, userId } = user;
+  const expirationTime = moment().add(15, 'minutes').valueOf() / 1000;
+  const payload = { isAdmin, email, userId };
+  try {
+    const token = sign(
+      {
+        exp: Math.ceil(expirationTime),
+        data: payload
+      },
+      jwtSecret
+    );
+    return token;
+  } catch {
+    return undefined;
+  }
 };
 
 export const generateAppleJwtToken = () => {
