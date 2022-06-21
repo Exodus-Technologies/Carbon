@@ -47,14 +47,14 @@ exports.deleteUser = async (req, res, next) => {
   }
 };
 
-exports.getSubscriptionProducts = async (req, res, next) => {
-  try {
-    const { platform } = req.query;
-    const [statusCode, response] = await UserService.getSubscriptionProducts(
-      platform
-    );
-    res.status(statusCode).send(response);
-  } catch (err) {
-    next(err);
-  }
-};
+// exports.getSubscriptionProducts = async (req, res, next) => {
+//   try {
+//     const { platform } = req.query;
+//     const [statusCode, response] = await UserService.getSubscriptionProducts(
+//       platform
+//     );
+//     res.status(statusCode).send(response);
+//   } catch (err) {
+//     next(err);
+//   }
+// };

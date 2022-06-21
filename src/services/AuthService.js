@@ -2,6 +2,7 @@
 
 import models from '../models';
 import { badImplementationRequest, badRequest } from '../response-codes';
+import { generateAuthJwtToken } from '../utils/TokenGenerator';
 // import { updateUserResetPassword } from '../mongodb';
 // import config from '../config';
 // import EmailHelper from '../utils/EmailHelper';
@@ -29,6 +30,7 @@ exports.validateLogin = async (email, password) => {
           isAdmin,
           userId
         } = user;
+        const token = generateAuthJwtToken(user);
         return [
           200,
           {
@@ -42,7 +44,8 @@ exports.validateLogin = async (email, password) => {
               zipCode,
               userId,
               isAdmin
-            }
+            },
+            token
           }
         ];
       }
