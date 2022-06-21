@@ -1,3 +1,5 @@
+'use strict';
+
 import sgMail from '@sendgrid/mail';
 import config from '../config';
 
