@@ -58,35 +58,34 @@ exports.validateLogin = async (email, password) => {
   }
 };
 
-// exports.changePassword = async (email, password, code) => {
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user)
-//       return badRequest('Email does not belong to any registered user.');
-
-//     const { requestResetPassword } = user;
-//     if (!requestResetPassword || code !== requestResetPassword.code)
-//       return badRequest('The code is invalid');
-//     if (new Date() > new Date(requestResetPassword.expiredAt))
-//       return badRequest('The code is no longer valid');
-
-//     user.password = password;
-//     user.requestResetPassword = { ...requestResetPassword, code: '' };
-//     const updatedUser = await user.save();
-//     if (updatedUser) {
-//       return [
-//         200,
-//         {
-//           message: 'Password reset success.'
-//         }
-//       ];
-//     }
-//     return badRequest('Error updating password.');
-//   } catch (err) {
-//     console.log(`Error updating password: `, err);
-//     return badImplementationRequest('Error updating password.');
-//   }
-// };
+exports.changePassword = async (email, currentPassword, newPassword) => {
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return badRequest('Email does not belong to any registered user.');
+    }
+    if (user) {
+      const validPassword = user.comparePassword(currentPassword);
+      if (validPassword) {
+        user.password = newPassword;
+        const updatedUser = await user.save();
+        if (updatedUser) {
+          return [
+            200,
+            {
+              message: 'Password change successful.'
+            }
+          ];
+        }
+      }
+      return badRequest('Password does not match for this user.');
+    }
+    return badRequest('Error updating password.');
+  } catch (err) {
+    console.log(`Error updating password: `, err);
+    return badImplementationRequest('Error updating password.');
+  }
+};
 
 // exports.requestPasswordReset = async payload => {
 //   try {

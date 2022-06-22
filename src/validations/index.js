@@ -139,17 +139,20 @@ const changePasswordValidation = [
     .isString()
     .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
-  body('password')
+  body('currentPassword')
     .isString()
     .isLength({ min: 8 })
     .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     ),
-  body('code')
+  body('newPassword')
     .isString()
-    .isLength({ min: 6, max: 6 })
-    .withMessage('Must provide a valid code.')
+    .isLength({ min: 8 })
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
+    .withMessage(
+      'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
+    )
 ];
 
 const userEmailParamValidation = [
