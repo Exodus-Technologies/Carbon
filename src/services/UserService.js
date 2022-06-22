@@ -1,9 +1,9 @@
 'use strict';
 
-import { google } from 'googleapis';
+// import { google } from 'googleapis';
 
-const fetch = (...args) =>
-  import('node-fetch').then(({ default: fetch }) => fetch(...args));
+// const fetch = (...args) =>
+//   import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 import { badRequest, badImplementationRequest } from '../response-codes';
 import {
@@ -13,8 +13,8 @@ import {
   updateUser,
   deleteUserById
 } from '../mongodb';
-import config from '../config';
-import { generateAppleJwtToken } from '../utils/token';
+// import config from '../config';
+// import { generateAppleJwtToken } from '../utils/token';
 
 exports.getUsers = async query => {
   try {
@@ -33,6 +33,36 @@ exports.getUsers = async query => {
   } catch (err) {
     console.log('Error getting all users: ', err);
     return badImplementationRequest('Error getting users.');
+  }
+};
+
+exports.getUser = async userId => {
+  try {
+    const [error, user] = await getUserById(userId);
+    if (user) {
+      const { email, fullName, gender, city, state, zipCode, isAdmin, userId } =
+        user;
+      return [
+        200,
+        {
+          message: 'User was successfully fetched.',
+          user: {
+            email,
+            fullName,
+            gender,
+            city,
+            state,
+            zipCode,
+            userId,
+            isAdmin
+          }
+        }
+      ];
+    }
+    return badRequest(error.message);
+  } catch (err) {
+    console.log('Error getting user: ', err);
+    return badImplementationRequest('Error getting user.');
   }
 };
 

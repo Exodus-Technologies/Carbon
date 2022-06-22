@@ -60,13 +60,13 @@ export const getUsers = async query => {
       .sort(sortString)
       .lean()
       .exec();
-    console.log({ users });
     const total = await User.find(objectFilter, queryOps).count();
-    return users.map(user => ({
+    const result = users.map(user => ({
       ...user,
       total,
       pages: Math.ceil(total / limit)
     }));
+    return [null, result];
   } catch (err) {
     console.log('Error getting user data from db: ', err);
   }
@@ -76,7 +76,7 @@ export const getUserById = async userId => {
   try {
     const { User } = models;
     const user = await User.findOne({ userId });
-    return user;
+    return [null, user];
   } catch (err) {
     console.log('Error getting user data to db: ', err);
   }
@@ -136,28 +136,28 @@ export const deleteUserById = async userId => {
   try {
     const { User } = models;
     const deletedUser = await User.deleteOne({ userId });
-    return deletedUser;
+    return [null, deletedUser];
   } catch (err) {
     console.log('Error deleting user data from db: ', err);
   }
 };
 
-export const updateUserResetPassword = async ({ email }) => {
-  try {
-    const { User } = models;
-    const user = await User.findOne({ email });
-    if (!user) throw new Error('User not found!');
-    user.requestResetPassword = {
-      code: generateToken(),
-      expiredAt: new Date(
-        new Date().getTime() +
-          Number(config.requestResetPasswordCodeExpireInMinutes) * 60 * 1000
-      )
-    };
-    await user.save();
+// export const updateUserResetPassword = async ({ email }) => {
+//   try {
+//     const { User } = models;
+//     const user = await User.findOne({ email });
+//     if (!user) throw new Error('User not found!');
+//     user.requestResetPassword = {
+//       code: generateToken(),
+//       expiredAt: new Date(
+//         new Date().getTime() +
+//           Number(config.requestResetPasswordCodeExpireInMinutes) * 60 * 1000
+//       )
+//     };
+//     await user.save();
 
-    return [null, user];
-  } catch (err) {
-    console.log('Error updating user data from db: ', err);
-  }
-};
+//     return [null, user];
+//   } catch (err) {
+//     console.log('Error updating user data from db: ', err);
+//   }
+// };
