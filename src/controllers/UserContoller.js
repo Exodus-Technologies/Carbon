@@ -13,6 +13,17 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
+exports.getUser = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const [statusCode, response] = await UserService.getUser(userId);
+    res.status(statusCode).send(response);
+  } catch (err) {
+    console.log(`Error getting user: ${userId}: `, err);
+    next(err);
+  }
+};
+
 exports.createUser = async (req, res, next) => {
   try {
     const { body } = req;

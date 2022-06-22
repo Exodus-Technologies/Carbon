@@ -21,6 +21,13 @@ router.get(
   UserController.getUsers
 );
 
+router.get(
+  '/auth-service/getUser/:userId',
+  userIdParamValidation,
+  validationHandler,
+  UserController.getUser
+);
+
 router.post(
   '/auth-service/createUser',
   userCreationValidation,
