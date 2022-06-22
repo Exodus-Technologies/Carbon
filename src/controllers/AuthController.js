@@ -16,20 +16,20 @@ exports.login = async (req, res, next) => {
   }
 };
 
-// exports.changePassword = async (req, res, next) => {
-//   try {
-//     const { email, password, code } = req.body;
-//     const [statusCode, response] = await AuthService.changePassword(
-//       email,
-//       password,
-//       code
-//     );
-//     res.status(statusCode).send(response);
-//   } catch (err) {
-//     console.log(`Error with changing password: `, err);
-//     next(err);
-//   }
-// };
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { email, currentPassword, newPassword } = req.body;
+    const [statusCode, response] = await AuthService.changePassword(
+      email,
+      currentPassword,
+      newPassword
+    );
+    res.status(statusCode).send(response);
+  } catch (err) {
+    console.log(`Error with changing password: `, err);
+    next(err);
+  }
+};
 
 // exports.requestPasswordReset = async (req, res, next) => {
 //   try {
