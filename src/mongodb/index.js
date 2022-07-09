@@ -2,7 +2,6 @@
 
 import config from '../config';
 import models from '../models';
-import { generateToken } from '../utils/token';
 
 const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
 
@@ -82,13 +81,26 @@ export const getUserById = async userId => {
   }
 };
 
+export const getUserByEmail = async email => {
+  try {
+    const { User } = models;
+    const user = await User.findOne({ email }, queryOps);
+    if (user) {
+      return [null, user];
+    }
+    return [new Error('No user found associated with email provided.')];
+  } catch (err) {
+    console.log('Error getting user data to db: ', err);
+    return [new Error('No user found associated with email provided.')];
+  }
+};
+
 export const saveUserRefToDB = async payload => {
   try {
     const { User } = models;
     const { email } = payload;
     const user = await User.findOne({ email });
     if (!user) {
-      const { User } = models;
       const user = new User(payload);
       const createdUser = await user.save();
       return [null, createdUser];
@@ -142,22 +154,38 @@ export const deleteUserById = async userId => {
   }
 };
 
-// export const updateUserResetPassword = async ({ email }) => {
-//   try {
-//     const { User } = models;
-//     const user = await User.findOne({ email });
-//     if (!user) throw new Error('User not found!');
-//     user.requestResetPassword = {
-//       code: generateToken(),
-//       expiredAt: new Date(
-//         new Date().getTime() +
-//           Number(config.requestResetPasswordCodeExpireInMinutes) * 60 * 1000
-//       )
-//     };
-//     await user.save();
+export const getTokenByUserId = async userId => {
+  try {
+    const { Token } = models;
+    const token = await Token.findOne({ userId });
+    return [null, token];
+  } catch (err) {
+    console.log('Error getting user data to db: ', err);
+  }
+};
 
-//     return [null, user];
-//   } catch (err) {
-//     console.log('Error updating user data from db: ', err);
-//   }
-// };
+export const saveTokenRefToDB = async payload => {
+  try {
+    const { Token } = models;
+    const { userId } = payload;
+    const token = await Token.findOne({ userId });
+    if (!token) {
+      const newToken = new Token(payload);
+      const createdToken = await newToken.save();
+      return [null, createdToken];
+    }
+    return [Error('Token with the userId provided alreayd exists.')];
+  } catch (err) {
+    console.log('Error saving token data to db: ', err);
+  }
+};
+
+export const deleteToken = async userId => {
+  try {
+    const { Token } = models;
+    const deletedToken = await Token.deleteOne({ userId });
+    return [null, deletedToken];
+  } catch (err) {
+    console.log('Error deleting user data from db: ', err);
+  }
+};

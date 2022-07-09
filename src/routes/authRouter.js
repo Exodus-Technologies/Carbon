@@ -5,8 +5,8 @@ import { AuthController, UserController } from '../controllers';
 import {
   loginValidation,
   userCreationValidation,
+  userEmailParamValidation,
   changePasswordValidation
-  // userEmailParamValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
 
@@ -27,18 +27,18 @@ router.post(
   UserController.createUser
 );
 
-router.put(
-  '/auth-service/changePassword',
-  changePasswordValidation,
+router.post(
+  '/auth-service/requestPasswordReset',
+  userEmailParamValidation,
   validationHandler,
-  AuthController.changePassword
+  AuthController.requestPasswordReset
 );
 
-// router.post(
-//   '/auth-service/requestPasswordReset',
-//   userEmailParamValidation,
-//   validationHandler,
-//   AuthController.requestPasswordReset
-// );
+router.put(
+  '/auth-service/resetPassword',
+  changePasswordValidation,
+  validationHandler,
+  AuthController.resetPassword
+);
 
 export default router;

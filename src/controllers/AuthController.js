@@ -16,12 +16,11 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.changePassword = async (req, res, next) => {
+exports.resetPassword = async (req, res, next) => {
   try {
-    const { email, currentPassword, newPassword } = req.body;
-    const [statusCode, response] = await AuthService.changePassword(
+    const { email, newPassword } = req.body;
+    const [statusCode, response] = await AuthService.resetPassword(
       email,
-      currentPassword,
       newPassword
     );
     res.status(statusCode).send(response);
@@ -31,16 +30,15 @@ exports.changePassword = async (req, res, next) => {
   }
 };
 
-// exports.requestPasswordReset = async (req, res, next) => {
-//   try {
-//     const { body } = req;
-//     const [statusCode, response] = await AuthService.requestPasswordReset(body);
-//     res.status(statusCode).send(response);
-//   } catch (err) {
-//     console.log(
-//       `Error password reset requesting for user: ${req.body.email}: `,
-//       err
-//     );
-//     next(err);
-//   }
-// };
+exports.requestPasswordReset = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const [statusCode, response] = await AuthService.requestPasswordReset(
+      email
+    );
+    res.status(statusCode).send(response);
+  } catch (err) {
+    console.log(`Error password reset requesting for user: ${email}: `, err);
+    next(err);
+  }
+};

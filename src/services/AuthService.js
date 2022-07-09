@@ -1,22 +1,23 @@
 'use strict';
 
-import models from '../models';
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import config from '../config';
 import { badImplementationRequest, badRequest } from '../response-codes';
 import { generateAuthJwtToken } from '../utils/token';
-// import { updateUserResetPassword } from '../mongodb';
-// import config from '../config';
-// import EmailHelper from '../utils/EmailHelper';
+import { sendMail } from '../utils/email';
+import {
+  getTokenByUserId,
+  getUserByEmail,
+  saveTokenRefToDB,
+  deleteToken
+} from '../mongodb';
 
-const { User } = models;
-
-// const { requestResetPasswordCodeExpireInMinutes, noReplyEmail, sendGridKey } =
-//   config.twilio;
-
-const queryOps = { __v: 0, _id: 0, createdAt: 0, updatedAt: 0 };
+const { HASH_SALT } = config;
 
 exports.validateLogin = async (email, password) => {
   try {
-    const user = await User.findOne({ email }, queryOps);
+    const [error, user] = await getUserByEmail(email);
     if (user) {
       const validPassword = user.comparePassword(password);
       if (validPassword) {
@@ -51,34 +52,43 @@ exports.validateLogin = async (email, password) => {
       }
       return badRequest('Incorrect credentials used for login.');
     }
-    return badRequest('User does not exist.');
+    return badRequest(error.message);
   } catch (err) {
     console.log(`Error logging with credentials: `, err);
     return badImplementationRequest('Error logging with credentials.');
   }
 };
 
-exports.changePassword = async (email, currentPassword, newPassword) => {
+exports.resetPassword = async (userId, token, password) => {
   try {
-    const user = await User.findOne({ email });
+    const passwordResetToken = await getTokenByUserId(userId);
+    if (!passwordResetToken) {
+      return badRequest('Invalid or expired password reset token');
+    }
+
+    const isValid = await bcrypt.compare(token, passwordResetToken.token);
+    if (!isValid) {
+      return badRequest('Invalid or expired password reset token');
+    }
+
+    const [error, user] = await getUserByEmail(email);
+
     if (!user) {
-      return badRequest('Email does not belong to any registered user.');
+      return badRequest(error.message);
     }
     if (user) {
-      const validPassword = user.comparePassword(currentPassword);
-      if (validPassword) {
-        user.password = newPassword;
-        const updatedUser = await user.save();
-        if (updatedUser) {
-          return [
-            200,
-            {
-              message: 'Password change successful.'
-            }
-          ];
-        }
+      user.password = password;
+      const updatedUser = await user.save();
+      if (updatedUser) {
+        //sendEmail
+        await deleteToken(user.userId);
+        return [
+          200,
+          {
+            message: 'Password reset successful.'
+          }
+        ];
       }
-      return badRequest('Password does not match for this user.');
     }
     return badRequest('Error updating password.');
   } catch (err) {
@@ -87,40 +97,52 @@ exports.changePassword = async (email, currentPassword, newPassword) => {
   }
 };
 
-// exports.requestPasswordReset = async payload => {
-//   try {
-//     const [error, user] = await updateUserResetPassword(payload);
+exports.requestPasswordReset = async email => {
+  try {
+    const [error, user] = await getUserByEmail(email);
+    if (!user) {
+      return badRequest(error.message);
+    }
 
-//     if (!user) {
-//       return badRequest('Email does not belong to any registered user');
-//     }
+    const { userId } = user;
 
-//     const html = `
-//     <div>
-//       Dear ${user.fullName},<br><br>
-//       Your reset password code is: <b>${user.requestResetPassword.code}</b>. The code is only valid for ${requestResetPasswordCodeExpireInMinutes} minutes.
-//     </div>
-//   `;
+    const token = await getTokenByUserId(userId);
+    if (token) {
+      await deleteToken(userId);
+    }
 
-//     await EmailHelper.sendMail(
-//       noReplyEmail,
-//       user.email,
-//       'Carbon password reset',
-//       html
-//     );
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hash = await bcrypt.hash(resetToken, HASH_SALT);
 
-//     if (user) {
-//       return [
-//         200,
-//         {
-//           message: `Password reset success, an email has been sent to your email with the code to reset your password. The code is only valid for ${requestResetPasswordCodeExpireInMinutes} minutes.`
-//         }
-//       ];
-//     } else {
-//       return badRequest(error.message);
-//     }
-//   } catch (err) {
-//     console.log(`Error password reset requesting: `, err);
-//     return badImplementationRequest('Error password reset requesting.');
-//   }
-// };
+    await saveTokenRefToDB({
+      userId,
+      token: hash,
+      createdAt: Date.now()
+    });
+
+    const html = `<html>
+      <head>
+            <style>
+            </style>
+        </head>
+        <body>
+            <p>Hi ${user.fullName},</p>
+            <p>You requested to reset your password.</p>
+            <p> Please, click the link below to reset your password</p>
+            <a href="http://sheenmagazinecms.us-east-1.elasticbeanstalk.com/resetPassword?token=${resetToken}&id=${userId}">Reset Password</a>
+        </body>
+    </html>`;
+
+    await sendMail(email, 'Password Reset Request', html);
+
+    return [
+      200,
+      {
+        message: `Password reset success, an email with instructions has been sent to your email.`
+      }
+    ];
+  } catch (err) {
+    console.log(`Error password reset requesting: `, err);
+    return badImplementationRequest('Error password reset requesting.');
+  }
+};

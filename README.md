@@ -59,12 +59,15 @@ Carbon utilizes dotenv[https://github.com/motdotla/dotenv] for environment varia
 - HOST (hostname for application)
 - DEFAULT_CACHE_TTL (ttl for node cache module for requests)
 - CLUSTER_NAME (mongo db clsuter name)
-- COLLECTION_NAME (collection name for users)
 - DB_NAME (databse name)
 - DB_USER (databse user name)
 - DB_PASS (databse user password)
 - HASH_SALT (number to use to generate cryptic password)
 - PASSWORD (password for seeded users)
+- AWS_ACCESS_KEY_ID (AWS access key)
+- AWS_SECRET_ACCESS_KEY (AWS secret access key)
+- AWS_REGION (AWS region)
+- NO_REPLY_EMAIL (sender email address)
 
 # Running the project (development mode)
 
