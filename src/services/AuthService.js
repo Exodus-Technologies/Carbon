@@ -114,7 +114,7 @@ exports.requestPasswordReset = async email => {
             <p>Hi ${user.fullName},</p>
             <p>You requested to reset your password.</p>
             <p> Please, click the link below to reset your password</p>
-            <a href="${CMS}/resetPassword">Reset Password</a>
+            <a href="${CMS}/resetPassword?email=${email}&token=${resetToken}">Reset Password</a>
         </body>
     </html>`;
 
@@ -146,7 +146,7 @@ exports.requestPasswordReset = async email => {
   }
 };
 
-exports.resetPassword = async (email, password) => {
+exports.resetPassword = async (token, email, password) => {
   try {
     const [error, user] = await getUserByEmail(email);
     if (!user) {
@@ -167,6 +167,20 @@ exports.resetPassword = async (email, password) => {
       user.password = password;
       const updatedUser = await user.save();
       if (updatedUser) {
+        const html = `<html>
+      <head>
+            <style>
+            </style>
+        </head>
+        <body>
+            <p>Hi ${updatedUser.fullName},</p>
+            <p>You request to reset your password was successful.</p>
+            <p> Please, click the link below to login with your new password</p>
+            <a href="${CMS}/login">Login</a>
+        </body>
+    </html>`;
+
+        await sendMail(email, 'Password Reset Successfully', html);
         await deleteToken(user.userId);
         return [
           200,

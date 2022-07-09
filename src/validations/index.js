@@ -139,6 +139,7 @@ const changePasswordValidation = [
     .isString()
     .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
+  body('token').isString().withMessage('Must provide a token.'),
   body('password')
     .isString()
     .isLength({ min: 8 })
