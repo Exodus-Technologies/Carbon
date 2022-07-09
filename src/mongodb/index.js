@@ -158,9 +158,10 @@ export const getTokenByUserId = async userId => {
   try {
     const { Token } = models;
     const token = await Token.findOne({ userId });
-    return [null, token];
+    return token;
   } catch (err) {
     console.log('Error getting user data to db: ', err);
+    return null;
   }
 };
 
@@ -187,5 +188,15 @@ export const deleteToken = async userId => {
     return [null, deletedToken];
   } catch (err) {
     console.log('Error deleting user data from db: ', err);
+  }
+};
+
+export const saveTransaction = async payload => {
+  try {
+    const { Transaction } = models;
+    const transaction = new Transaction(payload);
+    await transaction.save();
+  } catch (err) {
+    console.log('Error saving user data to db: ', err);
   }
 };

@@ -139,7 +139,7 @@ const changePasswordValidation = [
     .isString()
     .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
-  body('newPassword')
+  body('password')
     .isString()
     .isLength({ min: 8 })
     .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
@@ -148,7 +148,7 @@ const changePasswordValidation = [
     )
 ];
 
-const userEmailParamValidation = [
+const userEmailBodyValidation = [
   body('email')
     .isString()
     .isEmail()
@@ -167,7 +167,7 @@ export {
   userQueryValidation,
   loginValidation,
   userIdParamValidation,
-  userEmailParamValidation,
+  userEmailBodyValidation,
   changePasswordValidation,
   platfromQueryValidation
 };

@@ -6,6 +6,7 @@ const config = {
   NODE_ENV: process.env.NODE_ENV,
   HOST: process.env.HOST,
   PORT: process.env.PORT,
+  CMS: process.env.CMS_HOST,
   HASH_SALT: Number(process.env.HASH_SALT),
   PASSWORD: process.env.PASSWORD,
   jwtSecret: process.env.DB_PASS,

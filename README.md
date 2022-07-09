@@ -68,6 +68,7 @@ Carbon utilizes dotenv[https://github.com/motdotla/dotenv] for environment varia
 - AWS_SECRET_ACCESS_KEY (AWS secret access key)
 - AWS_REGION (AWS region)
 - NO_REPLY_EMAIL (sender email address)
+- CMS_HOST (host name for sheen magazine cms)
 
 # Running the project (development mode)
 
