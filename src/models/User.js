@@ -10,8 +10,6 @@ const { Schema } = mongoose;
 const autoIncrement = mongooseSequence(mongoose);
 const { NODE_ENV, HASH_SALT } = config;
 
-const saltRounds = Number(HASH_SALT);
-
 //USER SCHEMA
 //  ============================================
 const userSchema = new Schema(
@@ -57,7 +55,7 @@ userSchema.pre('save', function (next) {
   if (!user.isModified('password')) return next();
 
   //Generate Salt
-  const salt = bcrypt.genSaltSync(saltRounds);
+  const salt = bcrypt.genSaltSync(HASH_SALT);
   const hash = bcrypt.hashSync(user.password, salt);
   user.password = hash;
   next();

@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Exodus-Technologies/Carbon#readme",
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.121.0",
     "@babel/core": "^7.17.2",
     "@babel/preset-env": "^7.16.11",
     "@babel/register": "^7.17.0",
