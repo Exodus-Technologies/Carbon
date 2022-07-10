@@ -17,9 +17,3 @@ export const fancyTimeFormat = duration => {
   ret += '' + secs;
   return ret;
 };
-
-export const oneHourAgo = date => {
-  const hour = 1000 * 60 * 60;
-  const hourago = Date.now() - hour;
-  return date < hourago;
-};

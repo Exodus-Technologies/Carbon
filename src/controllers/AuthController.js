@@ -31,9 +31,10 @@ exports.requestPasswordReset = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, token, password } = req.body;
     const [statusCode, response] = await AuthService.resetPassword(
       email,
+      token,
       password
     );
     res.status(statusCode).send(response);

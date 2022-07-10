@@ -84,7 +84,6 @@ export const getUserById = async userId => {
 export const getUserByEmail = async email => {
   const opts = {
     __v: 0,
-    _id: 0,
     createdAt: 0,
     updatedAt: 0
   };
@@ -92,9 +91,9 @@ export const getUserByEmail = async email => {
     const { User } = models;
     const user = await User.findOne({ email }, opts);
     if (user) {
-      return [null, user];
+      return user;
     }
-    return [new Error('No user found associated with email provided.')];
+    return null;
   } catch (err) {
     console.log('Error getting user data to db: ', err);
     return [new Error('No user found associated with email provided.')];
@@ -164,10 +163,12 @@ export const getTokenByUserId = async userId => {
   try {
     const { Token } = models;
     const token = await Token.findOne({ userId });
-    return token;
+    if (token) {
+      return token;
+    }
+    return null;
   } catch (err) {
     console.log('Error getting user data to db: ', err);
-    return null;
   }
 };
 

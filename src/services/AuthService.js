@@ -13,7 +13,6 @@ import {
   deleteToken,
   saveTransaction
 } from '../mongodb';
-import { oneHourAgo } from '../utils/time';
 
 const { HASH_SALT, CMS } = config;
 
@@ -80,30 +79,18 @@ exports.requestPasswordReset = async email => {
 
     const token = await getTokenByUserId(userId);
 
+    if (token) {
+      await deleteToken(userId);
+    }
+
     const resetToken = crypto.randomBytes(32).toString('hex');
     const hash = await bcrypt.hash(resetToken, HASH_SALT);
 
-    if (token) {
-      const { createdAt } = token;
-      const isTokenExpired = oneHourAgo(createdAt);
-      if (isTokenExpired) {
-        await deleteToken(userId);
-
-        await saveTokenRefToDB({
-          userId,
-          token: hash,
-          createdAt: Date.now()
-        });
-      }
-    }
-
-    if (!token) {
-      await saveTokenRefToDB({
-        userId,
-        token: hash,
-        createdAt: Date.now()
-      });
-    }
+    await saveTokenRefToDB({
+      userId,
+      token: hash,
+      createdAt: Date.now()
+    });
 
     const html = `<html>
       <head>
@@ -146,13 +133,15 @@ exports.requestPasswordReset = async email => {
   }
 };
 
-exports.resetPassword = async (token, email, password) => {
+exports.resetPassword = async (email, token, password) => {
   try {
-    const [error, user] = await getUserByEmail(email);
+    const user = await getUserByEmail(email);
+
     if (!user) {
-      return badRequest(error.message);
+      return badRequest('No user found associated with email provided.');
     }
     const passwordResetToken = await getTokenByUserId(user.userId);
+
     if (!passwordResetToken) {
       return badRequest('Invalid or expired password reset token');
     }
@@ -168,7 +157,7 @@ exports.resetPassword = async (token, email, password) => {
       const updatedUser = await user.save();
       if (updatedUser) {
         const html = `<html>
-      <head>
+        <head>
             <style>
             </style>
         </head>
@@ -176,12 +165,12 @@ exports.resetPassword = async (token, email, password) => {
             <p>Hi ${updatedUser.fullName},</p>
             <p>You request to reset your password was successful.</p>
             <p> Please, click the link below to login with your new password</p>
-            <a href="${CMS}/login">Login</a>
+            <a href="${CMS}/">Login</a>
         </body>
-    </html>`;
+      </html>`;
 
         await sendMail(email, 'Password Reset Successfully', html);
-        await deleteToken(user.userId);
+        await deleteToken(updatedUser.userId);
         return [
           200,
           {
