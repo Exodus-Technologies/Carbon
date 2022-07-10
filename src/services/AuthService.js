@@ -18,7 +18,7 @@ const { HASH_SALT, CMS } = config;
 
 exports.validateLogin = async (email, password) => {
   try {
-    const [error, user] = await getUserByEmail(email);
+    const user = await getUserByEmail(email);
     if (user) {
       const validPassword = user.comparePassword(password);
       if (validPassword) {
@@ -53,7 +53,7 @@ exports.validateLogin = async (email, password) => {
       }
       return badRequest('Incorrect credentials used for login.');
     }
-    return badRequest(error.message);
+    return badRequest('Unable to find user with email provided.');
   } catch (err) {
     console.log(`Error logging with credentials: `, err);
     return badImplementationRequest('Error logging with credentials.');
@@ -62,7 +62,7 @@ exports.validateLogin = async (email, password) => {
 
 exports.requestPasswordReset = async email => {
   try {
-    const [error, user] = await getUserByEmail(email);
+    const user = await getUserByEmail(email);
     const transactionId = generateToken();
     if (!user) {
       const transaction = {
@@ -72,7 +72,7 @@ exports.requestPasswordReset = async email => {
         reason: 'Email supplied is not registered to any user.'
       };
       saveTransaction(transaction);
-      return badRequest(error.message);
+      return badRequest('Unable to find user with email provided.');
     }
 
     const { userId } = user;
