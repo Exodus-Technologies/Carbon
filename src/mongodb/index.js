@@ -82,9 +82,15 @@ export const getUserById = async userId => {
 };
 
 export const getUserByEmail = async email => {
+  const opts = {
+    __v: 0,
+    _id: 0,
+    createdAt: 0,
+    updatedAt: 0
+  };
   try {
     const { User } = models;
-    const user = await User.findOne({ email }, queryOps);
+    const user = await User.findOne({ email }, opts);
     if (user) {
       return [null, user];
     }
