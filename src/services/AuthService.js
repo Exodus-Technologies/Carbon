@@ -80,30 +80,18 @@ exports.requestPasswordReset = async email => {
 
     const token = await getTokenByUserId(userId);
 
+    if (token) {
+      await deleteToken(userId);
+    }
+
     const resetToken = crypto.randomBytes(32).toString('hex');
     const hash = await bcrypt.hash(resetToken, HASH_SALT);
 
-    if (token) {
-      const { createdAt } = token;
-      const isTokenExpired = oneHourAgo(createdAt);
-      if (isTokenExpired) {
-        await deleteToken(userId);
-
-        await saveTokenRefToDB({
-          userId,
-          token: hash,
-          createdAt: Date.now()
-        });
-      }
-    }
-
-    if (!token) {
-      await saveTokenRefToDB({
-        userId,
-        token: hash,
-        createdAt: Date.now()
-      });
-    }
+    await new Token({
+      userId: user._id,
+      token: hash,
+      createdAt: Date.now()
+    }).save();
 
     const html = `<html>
       <head>
