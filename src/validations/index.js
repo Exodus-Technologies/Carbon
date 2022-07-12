@@ -149,7 +149,7 @@ const changePasswordValidation = [
     )
 ];
 
-const userEmailBodyValidation = [
+const passwordRequestResetBodyValidation = [
   body('email')
     .isString()
     .isEmail()
@@ -168,7 +168,7 @@ export {
   userQueryValidation,
   loginValidation,
   userIdParamValidation,
-  userEmailBodyValidation,
+  passwordRequestResetBodyValidation,
   changePasswordValidation,
   platfromQueryValidation
 };

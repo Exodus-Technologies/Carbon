@@ -19,8 +19,10 @@ exports.login = async (req, res, next) => {
 exports.requestPasswordReset = async (req, res, next) => {
   try {
     const { email } = req.body;
+    const { isMobile } = req.useragent;
     const [statusCode, response] = await AuthService.requestPasswordReset(
-      email
+      email,
+      isMobile
     );
     res.status(statusCode).send(response);
   } catch (err) {

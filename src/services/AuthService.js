@@ -60,7 +60,7 @@ exports.validateLogin = async (email, password) => {
   }
 };
 
-exports.requestPasswordReset = async email => {
+exports.requestPasswordReset = async (email, isMobile) => {
   try {
     const user = await getUserByEmail(email);
     const transactionId = generateToken();
@@ -100,25 +100,37 @@ exports.requestPasswordReset = async email => {
         <body>
             <p>Hi ${user.fullName},</p>
             <p>You requested to reset your password.</p>
-            <p> Please, click the link below to reset your password</p>
+            <p> Please, click the link below to reset your password.</p>
             <a href="${CMS}/resetPassword?email=${email}&token=${resetToken}">Reset Password</a>
         </body>
     </html>`;
 
-    await sendMail(email, 'Password Reset Request', html);
+    if (!isMobile) {
+      await sendMail(email, 'Password Reset Request', html);
+    }
+
     const transaction = {
       transactionId,
       userId,
       email,
       response: 'SUCCESS',
-      reason: 'Email was sent to user successfully.',
-      content: html
+      reason: isMobile
+        ? 'Reset Token was send to user for password reset.'
+        : 'Email was sent to user successfully.',
+      content: isMobile ? '' : html
     };
     saveTransaction(transaction);
     return [
       200,
       {
-        message: `Password reset success, an email with instructions has been sent to your email.`
+        message: `Password reset success! ${
+          isMobile
+            ? 'Please use token provided in resetting your password.'
+            : 'An email with instructions has been sent to your email.'
+        }`,
+        ...(isMobile && {
+          token: resetToken
+        })
       }
     ];
   } catch (err) {
