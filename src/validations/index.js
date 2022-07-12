@@ -157,6 +157,15 @@ const passwordRequestResetBodyValidation = [
     .withMessage('Must provide a existing and valid email.')
 ];
 
+const otpBodyValidation = [
+  body('email')
+    .isString()
+    .isEmail()
+    .matches(/\S+@\S+\.\S+/)
+    .withMessage('Must provide a existing and valid email.'),
+  body('optCode').isString().withMessage('Must provide a otpCode.')
+];
+
 const platfromQueryValidation = [
   query('platform').isString().withMessage('Must provide a device platform.')
 ];
@@ -170,5 +179,6 @@ export {
   userIdParamValidation,
   passwordRequestResetBodyValidation,
   changePasswordValidation,
-  platfromQueryValidation
+  platfromQueryValidation,
+  otpBodyValidation
 };

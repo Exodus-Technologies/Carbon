@@ -5,13 +5,21 @@ import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import config from '../config';
 
-const { sign } = jwt;
+const { sign, verify } = jwt;
 const { jwtSecret } = config;
 
-export const generateToken = (length = 6) => {
+export const generateTransactionId = () => {
   const nanoid = customAlphabet(
     '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    length
+    12
+  );
+  return nanoid();
+};
+
+export const generateOTPCode = () => {
+  const nanoid = customAlphabet(
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    6
   );
   return nanoid();
 };
@@ -31,6 +39,18 @@ export const generateAuthJwtToken = user => {
     return token;
   } catch {
     return undefined;
+  }
+};
+
+export const verifyJwtToken = token => {
+  try {
+    const decoded = verify(token, jwtSecret);
+    if (decoded) {
+      return true;
+    }
+    return true;
+  } catch (err) {
+    return false;
   }
 };
 

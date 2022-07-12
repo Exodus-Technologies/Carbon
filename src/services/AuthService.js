@@ -1,20 +1,21 @@
 'use strict';
 
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
-import config from '../config';
 import { badImplementationRequest, badRequest } from '../response-codes';
-import { generateAuthJwtToken, generateToken } from '../utils/token';
-import { sendMail } from '../mail';
 import {
-  getTokenByUserId,
+  generateAuthJwtToken,
+  generateTransactionId,
+  generateOTPCode,
+  verifyJwtToken
+} from '../utils/token';
+import { sendMail, generateHtmlRequest, generateHtmlReset } from '../mail';
+import {
+  getCodeByUserId,
   getUserByEmail,
-  saveTokenRefToDB,
-  deleteToken,
-  saveTransaction
+  saveCodeRefToDB,
+  deleteCode,
+  saveTransaction,
+  verifyOptCode
 } from '../mongodb';
-
-const { HASH_SALT, CMS } = config;
 
 exports.validateLogin = async (email, password) => {
   try {
@@ -32,7 +33,7 @@ exports.validateLogin = async (email, password) => {
           isAdmin,
           userId
         } = user;
-        const token = generateAuthJwtToken(user);
+        const token = generateAuthJwtCode(user);
         return [
           200,
           {
@@ -60,10 +61,10 @@ exports.validateLogin = async (email, password) => {
   }
 };
 
-exports.requestPasswordReset = async (email, isMobile) => {
+exports.requestPasswordReset = async email => {
   try {
     const user = await getUserByEmail(email);
-    const transactionId = generateToken();
+    const transactionId = generateTransactionId();
     if (!user) {
       const transaction = {
         transactionId,
@@ -77,60 +78,39 @@ exports.requestPasswordReset = async (email, isMobile) => {
 
     const { userId } = user;
 
-    const token = await getTokenByUserId(userId);
+    const token = await getCodeByUserId(userId);
 
     if (token) {
-      await deleteToken(userId);
+      await deleteCode(userId);
     }
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const hash = await bcrypt.hash(resetToken, HASH_SALT);
+    const optCode = generateOTPCode();
 
-    await saveTokenRefToDB({
+    await saveCodeRefToDB({
       userId,
-      token: hash,
+      email,
+      optCode,
       createdAt: Date.now()
     });
 
-    const html = `<html>
-      <head>
-            <style>
-            </style>
-        </head>
-        <body>
-            <p>Hi ${user.fullName},</p>
-            <p>You requested to reset your password.</p>
-            <p> Please, click the link below to reset your password.</p>
-            <a href="${CMS}/resetPassword?email=${email}&token=${resetToken}">Reset Password</a>
-        </body>
-    </html>`;
+    const html = generateHtmlRequest(user, optCode);
 
-    if (!isMobile) {
-      await sendMail(email, 'Password Reset Request', html);
-    }
+    await sendMail(email, 'Password Reset Request', html);
 
     const transaction = {
       transactionId,
       userId,
       email,
       response: 'SUCCESS',
-      reason: isMobile
-        ? 'Reset Token was send to user for password reset.'
-        : 'Email was sent to user successfully.',
-      content: isMobile ? '' : html
+      reason: 'Email was sent to user successfully for password request.',
+      content: html
     };
     saveTransaction(transaction);
     return [
       200,
       {
-        message: `Password reset success! ${
-          isMobile
-            ? 'Please use token provided in resetting your password.'
-            : 'An email with instructions has been sent to your email.'
-        }`,
-        ...(isMobile && {
-          token: resetToken
-        })
+        message: `Password reset success! An email with instructions has been sent to your email.'
+        }`
       }
     ];
   } catch (err) {
@@ -145,44 +125,55 @@ exports.requestPasswordReset = async (email, isMobile) => {
   }
 };
 
-exports.resetPassword = async (email, token, password) => {
+exports.verifyOTP = async (email, otpCode) => {
   try {
+    const [error, isVerified] = await verifyOptCode(email, otpCode);
+    if (isVerified) {
+      const user = await getUserByEmail(email);
+      const token = generateAuthJwtToken(user);
+      return [200, { message: 'Code was verified successfully.', token }];
+    }
+    return badRequest(error.message);
+  } catch (err) {
+    console.log('Error verifing code: ', err);
+    return badImplementationRequest('Error verifing code.');
+  }
+};
+
+exports.changePassword = async (email, token, password) => {
+  try {
+    const transactionId = generateTransactionId();
     const user = await getUserByEmail(email);
 
     if (!user) {
+      const transaction = {
+        transactionId,
+        response: 'ERROR',
+        email,
+        reason: 'Email supplied is not registered to any user.'
+      };
+      saveTransaction(transaction);
       return badRequest('No user found associated with email provided.');
     }
-    const passwordResetToken = await getTokenByUserId(user.userId);
 
-    if (!passwordResetToken) {
-      return badRequest('Invalid or expired password reset token');
-    }
-
-    const isValid = await bcrypt.compare(token, passwordResetToken.token);
-
-    if (!isValid) {
-      return badRequest('Invalid or expired password reset token');
-    }
-
-    if (user) {
+    const isVerified = verifyJwtToken(token);
+    if (isVerified) {
       user.password = password;
       const updatedUser = await user.save();
       if (updatedUser) {
-        const html = `<html>
-        <head>
-            <style>
-            </style>
-        </head>
-        <body>
-            <p>Hi ${updatedUser.fullName},</p>
-            <p>You request to reset your password was successful.</p>
-            <p> Please, click the link below to login with your new password</p>
-            <a href="${CMS}/">Login</a>
-        </body>
-      </html>`;
-
+        const { userId } = updatedUser;
+        const html = generateHtmlReset(user);
         await sendMail(email, 'Password Reset Successfully', html);
-        await deleteToken(updatedUser.userId);
+        const transaction = {
+          transactionId,
+          userId,
+          email,
+          response: 'SUCCESS',
+          reason: 'Email was sent to user successfully for password reset.',
+          content: html
+        };
+        saveTransaction(transaction);
+        await deleteCode(updatedUser.userId);
         return [
           200,
           {
@@ -191,9 +182,14 @@ exports.resetPassword = async (email, token, password) => {
         ];
       }
     }
-    return badRequest('Error updating password.');
   } catch (err) {
     console.log(`Error updating password: `, err);
+    const transaction = {
+      transactionId,
+      response: 'ERROR',
+      reason: `Email was not sent to user successfully due to: ${err.message}`
+    };
+    saveTransaction(transaction);
     return badImplementationRequest('Error updating password.');
   }
 };

@@ -6,7 +6,8 @@ import {
   loginValidation,
   userCreationValidation,
   passwordRequestResetBodyValidation,
-  changePasswordValidation
+  changePasswordValidation,
+  otpBodyValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
 
@@ -34,11 +35,18 @@ router.post(
   AuthController.requestPasswordReset
 );
 
+router.post(
+  '/auth-service/verifyOTP',
+  otpBodyValidation,
+  validationHandler,
+  AuthController.verifyOTP
+);
+
 router.put(
-  '/auth-service/resetPassword',
+  '/auth-service/changePassword',
   changePasswordValidation,
   validationHandler,
-  AuthController.resetPassword
+  AuthController.changePassword
 );
 
 export default router;

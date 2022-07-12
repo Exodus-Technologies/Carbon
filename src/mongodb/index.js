@@ -159,42 +159,42 @@ export const deleteUserById = async userId => {
   }
 };
 
-export const getTokenByUserId = async userId => {
+export const getCodeByUserId = async userId => {
   try {
-    const { Token } = models;
-    const token = await Token.findOne({ userId });
-    if (token) {
-      return token;
+    const { Code } = models;
+    const code = await Code.findOne({ userId });
+    if (code) {
+      return code;
     }
     return null;
   } catch (err) {
-    console.log('Error getting user data to db: ', err);
+    console.log('Error getting optCode for user data to db: ', err);
   }
 };
 
-export const saveTokenRefToDB = async payload => {
+export const saveCodeRefToDB = async payload => {
   try {
-    const { Token } = models;
+    const { Code } = models;
     const { userId } = payload;
-    const token = await Token.findOne({ userId });
-    if (!token) {
-      const newToken = new Token(payload);
-      const createdToken = await newToken.save();
-      return [null, createdToken];
+    const code = await Code.findOne({ userId });
+    if (!code) {
+      const newCode = new Code(payload);
+      const createdCode = await newCode.save();
+      return [null, createdCode];
     }
-    return [Error('Token with the userId provided alreayd exists.')];
+    return [Error('Code with the userId provided already exists.')];
   } catch (err) {
-    console.log('Error saving token data to db: ', err);
+    console.log('Error saving code data to db: ', err);
   }
 };
 
-export const deleteToken = async userId => {
+export const deleteCode = async userId => {
   try {
-    const { Token } = models;
-    const deletedToken = await Token.deleteOne({ userId });
-    return [null, deletedToken];
+    const { Code } = models;
+    const deletedCode = await Code.deleteOne({ userId });
+    return [null, deletedCode];
   } catch (err) {
-    console.log('Error deleting user data from db: ', err);
+    console.log('Error deleting code data from db: ', err);
   }
 };
 
@@ -204,6 +204,19 @@ export const saveTransaction = async payload => {
     const transaction = new Transaction(payload);
     await transaction.save();
   } catch (err) {
-    console.log('Error saving user data to db: ', err);
+    console.log('Error saving transaction data to db: ', err);
+  }
+};
+
+export const verifyOptCode = async (email, optCode) => {
+  try {
+    const { Code } = models;
+    const code = await Code.findOne({ email });
+    if (code.optCode === optCode) {
+      return [null, true];
+    }
+    return [Error('Code supplied was incorrect.')];
+  } catch (err) {
+    console.log(`Error verifying optCode: ${optCode}: `, err);
   }
 };
