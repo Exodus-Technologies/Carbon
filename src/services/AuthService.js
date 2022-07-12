@@ -33,7 +33,7 @@ exports.validateLogin = async (email, password) => {
           isAdmin,
           userId
         } = user;
-        const token = generateAuthJwtCode(user);
+        const token = generateAuthJwtToken(user);
         return [
           200,
           {
@@ -109,8 +109,7 @@ exports.requestPasswordReset = async email => {
     return [
       200,
       {
-        message: `Password reset success! An email with instructions has been sent to your email.'
-        }`
+        message: `Password reset success! An email with instructions has been sent to your email.`
       }
     ];
   } catch (err) {
