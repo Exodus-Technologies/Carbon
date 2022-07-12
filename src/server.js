@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import noCache from 'nocache';
 import cors from 'cors';
 import responseTime from 'response-time';
+import useragent from 'express-useragent';
 
 import { requestResponse, errorHandler } from './middlewares';
 import { appRouter, authRouter, userRouter } from './routes';
@@ -25,6 +26,10 @@ console.log('CORS enabled.');
 server.use(helmet());
 server.use(helmet.referrerPolicy());
 console.log('Loaded helmet middleware.');
+
+//Device detection middleware
+server.use(useragent.express());
+console.log('Loaded user-agent middleware.');
 
 //No cache middleware
 server.use(noCache());

@@ -5,7 +5,7 @@ import { AuthController, UserController } from '../controllers';
 import {
   loginValidation,
   userCreationValidation,
-  userEmailBodyValidation,
+  passwordRequestResetBodyValidation,
   changePasswordValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
@@ -29,7 +29,7 @@ router.post(
 
 router.post(
   '/auth-service/requestPasswordReset',
-  userEmailBodyValidation,
+  passwordRequestResetBodyValidation,
   validationHandler,
   AuthController.requestPasswordReset
 );
