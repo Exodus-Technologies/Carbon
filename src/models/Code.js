@@ -10,13 +10,17 @@ const { NODE_ENV } = config;
 
 //TOKEN SCHEMA
 //  ============================================
-const tokenSchema = new Schema({
+const optCodeSchema = new Schema({
   userId: {
     type: Number,
     required: true,
     ref: 'user'
   },
-  token: {
+  email: {
+    type: String,
+    required: true
+  },
+  optCode: {
     type: String,
     required: true
   },
@@ -30,16 +34,16 @@ const tokenSchema = new Schema({
 /**
  * Set the autoCreate option on models if not on production
  */
-tokenSchema.set('autoCreate', NODE_ENV !== 'production');
+optCodeSchema.set('autoCreate', NODE_ENV !== 'production');
 
 /**
- * Increments tokenId everytime an instances is created
+ * Increments optId everytime an instances is created
  */
-tokenSchema.plugin(autoIncrement, { inc_field: 'tokenId' });
+optCodeSchema.plugin(autoIncrement, { inc_field: 'optCodeId' });
 
 /**
- * Create Token model out of tokenSchema
+ * Create Code model out of optCodeSchema
  */
-const Token = mongoose.model('Token', tokenSchema);
+const Code = mongoose.model('Code', optCodeSchema);
 
-export default Token;
+export default Code;

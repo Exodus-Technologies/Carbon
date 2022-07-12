@@ -19,10 +19,9 @@ exports.login = async (req, res, next) => {
 exports.requestPasswordReset = async (req, res, next) => {
   try {
     const { email } = req.body;
-    const { isMobile } = req.useragent;
     const [statusCode, response] = await AuthService.requestPasswordReset(
       email,
-      isMobile
+      true
     );
     res.status(statusCode).send(response);
   } catch (err) {
@@ -31,10 +30,21 @@ exports.requestPasswordReset = async (req, res, next) => {
   }
 };
 
-exports.resetPassword = async (req, res, next) => {
+exports.verifyOTP = async (req, res, next) => {
+  try {
+    const { email, optCode } = req.body;
+    const [statusCode, response] = await AuthService.verifyOTP(email, optCode);
+    res.status(statusCode).send(response);
+  } catch (err) {
+    console.log(`Error verifying otp code for user: ${email}: `, err);
+    next(err);
+  }
+};
+
+exports.changePassword = async (req, res, next) => {
   try {
     const { email, token, password } = req.body;
-    const [statusCode, response] = await AuthService.resetPassword(
+    const [statusCode, response] = await AuthService.changePassword(
       email,
       token,
       password
