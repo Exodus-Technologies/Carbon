@@ -109,8 +109,7 @@ exports.requestPasswordReset = async email => {
     return [
       200,
       {
-        message: `Password reset success! An email with instructions has been sent to your email.'
-        }`
+        message: `Password reset success! An email with instructions has been sent to your email.`
       }
     ];
   } catch (err) {
