@@ -33,7 +33,7 @@ exports.validateLogin = async (email, password) => {
           isAdmin,
           userId
         } = user;
-        const token = generateAuthJwtCode(user);
+        const token = generateAuthJwtToken(user);
         return [
           200,
           {
