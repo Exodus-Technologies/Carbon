@@ -32,8 +32,8 @@ exports.requestPasswordReset = async (req, res, next) => {
 
 exports.verifyOTP = async (req, res, next) => {
   try {
-    const { email, optCode } = req.body;
-    const [statusCode, response] = await AuthService.verifyOTP(email, optCode);
+    const { email, otpCode } = req.body;
+    const [statusCode, response] = await AuthService.verifyOTP(email, otpCode);
     res.status(statusCode).send(response);
   } catch (err) {
     console.log(`Error verifying otp code for user: ${email}: `, err);

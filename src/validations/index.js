@@ -163,7 +163,7 @@ const otpBodyValidation = [
     .isEmail()
     .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
-  body('optCode').isString().withMessage('Must provide a otpCode.')
+  body('otpCode').isString().withMessage('Must provide a otpCode.')
 ];
 
 const platfromQueryValidation = [
