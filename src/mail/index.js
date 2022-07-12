@@ -14,7 +14,7 @@ export const sendMail = async (toEmail, subject, content) => {
   }
 };
 
-export const generateHtmlRequest = (user, optCode) => {
+export const generateHtmlRequest = (user, otpCode) => {
   const { fullName, email, isAdmin } = user;
   let html = `<html>
       <head>
@@ -25,7 +25,7 @@ export const generateHtmlRequest = (user, optCode) => {
             <p>Hi ${fullName},</p>
             <p>You requested to reset your password.</p>
             <p> Please, click the link below to reset your password.</p>
-            <a href="${CMS}/verifyOTP?otpCode=${optCode}&email=${email}">Verify OTP</a>
+            <a href="${CMS}/verifyOTP?otpCode=${otpCode}&email=${email}">Verify OTP</a>
         </body>
     </html>`;
   if (!isAdmin) {
@@ -37,7 +37,7 @@ export const generateHtmlRequest = (user, optCode) => {
         <body>
             <p>Hi ${fullName}</p>
             <p>You requested to reset your password.</p>
-            <p> Please use OTP code: ${optCode} to reset your password.</p>
+            <p> Please use OTP code: ${otpCode} to reset your password.</p>
         </body>
     </html>`;
   }

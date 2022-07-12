@@ -20,7 +20,7 @@ const optCodeSchema = new Schema({
     type: String,
     required: true
   },
-  optCode: {
+  otpCode: {
     type: String,
     required: true
   },

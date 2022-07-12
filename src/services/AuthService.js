@@ -84,16 +84,16 @@ exports.requestPasswordReset = async email => {
       await deleteCode(userId);
     }
 
-    const optCode = generateOTPCode();
+    const otpCode = generateOTPCode();
 
     await saveCodeRefToDB({
       userId,
       email,
-      optCode,
+      otpCode,
       createdAt: Date.now()
     });
 
-    const html = generateHtmlRequest(user, optCode);
+    const html = generateHtmlRequest(user, otpCode);
 
     await sendMail(email, 'Password Reset Request', html);
 

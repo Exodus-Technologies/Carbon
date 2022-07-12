@@ -168,7 +168,7 @@ export const getCodeByUserId = async userId => {
     }
     return null;
   } catch (err) {
-    console.log('Error getting optCode for user data to db: ', err);
+    console.log('Error getting otpCode for user data to db: ', err);
   }
 };
 
@@ -208,15 +208,16 @@ export const saveTransaction = async payload => {
   }
 };
 
-export const verifyOptCode = async (email, optCode) => {
+export const verifyOptCode = async (email, otpCode) => {
   try {
     const { Code } = models;
+    console.log(email, otpCode);
     const code = await Code.findOne({ email });
-    if (code.optCode === optCode) {
+    if (code.otpCode === otpCode) {
       return [null, true];
     }
     return [Error('Code supplied was incorrect.')];
   } catch (err) {
-    console.log(`Error verifying optCode: ${optCode}: `, err);
+    console.log(`Error verifying otpCode: ${otpCode}: `, err);
   }
 };
