@@ -1,6 +1,6 @@
 {
   "name": "carbon",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Microservice for all interactions for login, signup of users, and retrieving/updating user information for customers of Sheen magazine (Authentication Manager).",
   "main": "index.js",
   "scripts": {
