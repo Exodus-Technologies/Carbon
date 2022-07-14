@@ -70,22 +70,11 @@ exports.createUser = async payload => {
   try {
     const [error, user] = await saveUserRefToDB(payload);
     if (user) {
-      const { email, fullName, gender, city, state, zipCode, isAdmin, userId } =
-        user;
       return [
         201,
         {
           message: 'User created with success.',
-          user: {
-            email,
-            fullName,
-            gender,
-            city,
-            state,
-            zipCode,
-            userId,
-            isAdmin
-          }
+          user
         }
       ];
     } else {

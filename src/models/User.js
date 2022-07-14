@@ -24,6 +24,9 @@ const userSchema = new Schema(
     },
     password: { type: String, required: true },
     fullName: { type: String, required: true },
+    month: { type: String, required: true },
+    day: { type: String, required: true },
+    year: { type: String, required: true },
     gender: {
       type: String,
       required: true,
