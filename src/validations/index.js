@@ -40,9 +40,7 @@ const userCreationValidation = [
   body('fullName')
     .isString()
     .withMessage('Must provide your first and last name.'),
-  body('month').isString().withMessage('Must provide your month of birth.'),
-  body('day').isString().withMessage('Must provide your day of birth.'),
-  body('year').isString().withMessage('Must provide your year of birth.'),
+  body('dob').isString().withMessage('Must provide your date of birth'),
   body('gender')
     .isString()
     .custom(gender => {
