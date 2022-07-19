@@ -120,9 +120,9 @@ export const updateUser = async (userId, payload) => {
   try {
     const { User } = models;
     const { email } = payload;
-    //TODO: Find a way to update emails
-    if (email) {
-      return [Error('Unable to change email.')];
+    const user = await User.findOne({ email });
+    if (user) {
+      return [Error('Unable to change email. Email already in use.')];
     }
     const filter = { userId };
     const options = { new: true };
