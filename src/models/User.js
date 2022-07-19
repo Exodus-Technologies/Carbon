@@ -62,6 +62,21 @@ userSchema.pre('save', function (next) {
   next();
 });
 
+userSchema.pre('findOneAndUpdate', async function (next) {
+  try {
+    const user = this;
+    //Hash password only if the password has been changed or is new
+    if (user._update.password) {
+      const salt = bcrypt.genSaltSync(HASH_SALT);
+      const hash = bcrypt.hashSync(user._update.password, salt);
+      user._update.password = hash;
+    }
+    next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
 //Create method to compare a given password with the database hash
 userSchema.methods.comparePassword = function (password) {
   const user = this;
