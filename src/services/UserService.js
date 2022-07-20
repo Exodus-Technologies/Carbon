@@ -40,19 +40,11 @@ exports.getUser = async userId => {
   try {
     const [error, user] = await getUserById(userId);
     if (user) {
-      const { email, fullName, city, state, isAdmin, userId } = user;
       return [
         200,
         {
           message: 'User was successfully fetched.',
-          user: {
-            email,
-            fullName,
-            city,
-            state,
-            userId,
-            isAdmin
-          }
+          user
         }
       ];
     }
