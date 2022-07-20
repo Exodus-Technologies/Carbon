@@ -1,7 +1,5 @@
 'use strict';
 
-export const GENDERS = ['M', 'F'];
-
 export const STATES = [
   'AL',
   'AK',

@@ -23,16 +23,7 @@ exports.validateLogin = async (email, password) => {
     if (user) {
       const validPassword = user.comparePassword(password);
       if (validPassword) {
-        const {
-          email,
-          fullName,
-          gender,
-          city,
-          state,
-          zipCode,
-          isAdmin,
-          userId
-        } = user;
+        const { email, fullName, city, state, isAdmin, userId } = user;
         const token = generateAuthJwtToken(user);
         return [
           200,
@@ -41,10 +32,8 @@ exports.validateLogin = async (email, password) => {
             user: {
               email,
               fullName,
-              gender,
               city,
               state,
-              zipCode,
               userId,
               isAdmin
             },

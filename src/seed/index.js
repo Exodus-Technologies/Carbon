@@ -11,44 +11,36 @@ const users = [
     email: 'publisher@sheenmagazine.com',
     password: PASSWORD,
     fullName: 'Jon Doe',
-    gender: 'M',
     city: 'Los Angeles',
     dob: '06/17/1997',
     state: 'CA',
-    zipCode: '90001',
     isAdmin: true
   },
   {
     email: 'sandy@gmail.com',
     password: PASSWORD,
     fullName: 'Landon',
-    gender: 'M',
     city: 'NYC',
     dob: '06/17/1997',
     state: 'AK',
-    zipCode: '12345',
     isAdmin: true
   },
   {
     email: 'moderator@sheenmagazine.com',
     password: PASSWORD,
     fullName: 'Jane Doe',
-    gender: 'F',
     city: 'Los Angeles',
     dob: '06/17/1997',
     state: 'CA',
-    zipCode: '90001',
     isAdmin: true
   },
   {
     email: 'subscriber@sheenmagazine.com',
     password: PASSWORD,
     fullName: 'Mary Doe',
-    gender: 'F',
     dob: '06/17/1997',
     city: 'Los Angeles',
     state: 'CA',
-    zipCode: '90001',
     isAdmin: false
   }
 ];

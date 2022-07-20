@@ -129,15 +129,12 @@ export const updateUser = async (userId, payload) => {
     const update = { ...payload };
     const updatedUser = await User.findOneAndUpdate(filter, update, options);
     if (updatedUser) {
-      const { email, fullName, gender, city, state, zipCode, isAdmin } =
-        updatedUser;
+      const { email, fullName, city, state, isAdmin } = updatedUser;
       const user = {
         email,
         fullName,
-        gender,
         city,
         state,
-        zipCode,
         isAdmin
       };
       return [null, user];

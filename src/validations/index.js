@@ -18,10 +18,8 @@ const userQueryValidation = [
     .not()
     .isEmpty()
     .withMessage('Must provide a limit for users'),
-  query('gender').isString().optional().isLength({ min: 1 }),
   query('city').isString().optional(),
-  query('state').isString().optional().isLength({ min: 2 }),
-  query('zipCode').isString().optional().isLength({ min: 5 })
+  query('state').isString().optional().isLength({ min: 2 })
 ];
 
 const userCreationValidation = [
@@ -41,16 +39,6 @@ const userCreationValidation = [
     .isString()
     .withMessage('Must provide your first and last name.'),
   body('dob').isString().withMessage('Must provide your date of birth'),
-  body('gender')
-    .isString()
-    .custom(gender => {
-      if (!GENDERS.includes(gender)) {
-        throw new Error('Gender submitted is not allowed for this field.');
-      }
-      // Indicates the success of this synchronous custom validator
-      return true;
-    })
-    .isLength({ min: 1 }),
   body('city')
     .isString()
     .withMessage('Must provide the city in which you stay.'),
@@ -63,11 +51,7 @@ const userCreationValidation = [
       // Indicates the success of this synchronous custom validator
       return true;
     })
-    .isLength({ min: 2 }),
-  body('zipCode')
-    .isString()
-    .withMessage('Must provide your zip code.')
-    .isLength({ min: 5 })
+    .isLength({ min: 2 })
 ];
 
 const userUpdateValidation = [
@@ -84,17 +68,6 @@ const userUpdateValidation = [
     .isString()
     .withMessage('Must provide your first and last name.')
     .optional(),
-  body('gender')
-    .isString()
-    .custom(gender => {
-      if (!GENDERS.includes(gender)) {
-        throw new Error('Gender submitted is not allowed for this field.');
-      }
-      // Indicates the success of this synchronous custom validator
-      return true;
-    })
-    .isLength({ min: 1 })
-    .optional(),
   body('city')
     .isString()
     .withMessage('Must provide the city in which you stay.')
@@ -109,11 +82,6 @@ const userUpdateValidation = [
       return true;
     })
     .isLength({ min: 2 })
-    .optional(),
-  body('zipCode')
-    .isString()
-    .withMessage('Must provide your zip code.')
-    .isLength({ min: 5 })
     .optional()
 ];
 

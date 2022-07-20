@@ -40,8 +40,7 @@ exports.getUser = async userId => {
   try {
     const [error, user] = await getUserById(userId);
     if (user) {
-      const { email, fullName, gender, city, state, zipCode, isAdmin, userId } =
-        user;
+      const { email, fullName, city, state, isAdmin, userId } = user;
       return [
         200,
         {
@@ -49,10 +48,8 @@ exports.getUser = async userId => {
           user: {
             email,
             fullName,
-            gender,
             city,
             state,
-            zipCode,
             userId,
             isAdmin
           }

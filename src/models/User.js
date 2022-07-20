@@ -25,18 +25,12 @@ const userSchema = new Schema(
     password: { type: String, required: true },
     fullName: { type: String, required: true },
     dob: { type: String, required: true },
-    gender: {
-      type: String,
-      required: true,
-      enum: GENDERS
-    },
     city: { type: String, required: true },
     state: {
       type: String,
       required: true,
       enum: STATES
     },
-    zipCode: { type: String, required: true },
     isAdmin: {
       type: Boolean,
       default: false
