@@ -1,8 +1,7 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import config from '../config';
 
-const { aws } = config.sources;
-const { notifications } = config.sources;
+const { aws, notifications } = config.sources;
 const { accessKeyId, secretAccessKey, region } = aws;
 const { noReplyEmail } = notifications;
 

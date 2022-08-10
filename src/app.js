@@ -4,7 +4,7 @@ import server from './server';
 import config from './config';
 import models from './models';
 import seedDb from './seed';
-import { generateDBUri } from './mongodb';
+import { getDBUri } from './mongodb';
 
 /**
  * Start web server
@@ -26,7 +26,7 @@ const initServer = async () => {
 const initDB = async () => {
   const { options } = config.sources.database;
   const { source } = models;
-  const uri = generateDBUri();
+  const uri = getDBUri();
   try {
     await source.connect(uri, options);
   } catch (e) {
