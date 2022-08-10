@@ -3,7 +3,7 @@
 import config from '../config';
 import models from '../models';
 
-const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
+const { dbUser, dbPass, clusterDomain, dbName } = config.sources.database;
 
 const queryOps = {
   __v: 0,
@@ -13,8 +13,8 @@ const queryOps = {
   updatedAt: 0
 };
 
-export const generateDBUri = () => {
-  return `mongodb+srv://${dbUser}:${dbPass}@${clusterName}.ybdno.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+export const getDBUri = () => {
+  return `mongodb+srv://${dbUser}:${dbPass}@${clusterDomain}/${dbName}?retryWrites=true&w=majority`;
 };
 
 export const getUsers = async query => {

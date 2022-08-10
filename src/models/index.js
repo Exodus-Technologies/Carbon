@@ -6,11 +6,7 @@
 import fs from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
-import config from '../config';
-
-const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
-
-const uri = `mongodb+srv://${dbUser}:${dbPass}@${clusterName}.ybdno.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+import { getDBUri } from '../mongodb';
 
 const basename = path.basename(__filename);
 
@@ -24,6 +20,7 @@ mongoose.connection.on('error', error => {
 });
 
 mongoose.connection.on('open', () => {
+  const uri = getDBUri();
   console.log(`Connected to ${uri}`);
 });
 
