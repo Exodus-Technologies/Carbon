@@ -1,7 +1,7 @@
 'use strict';
 
 import NodeCache from 'node-cache';
-import { validationResult } from '../validations';
+import { errorFormatter, validationResult } from '../validations';
 import config from '../config';
 
 const nodeCache = new NodeCache();
@@ -25,7 +25,7 @@ const errorHandler = (err, req, res, next) => {
 };
 
 const validationHandler = (req, res, next) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req).formatWith(errorFormatter);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }

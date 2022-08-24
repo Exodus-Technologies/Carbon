@@ -5,7 +5,7 @@
  */
 import { query, body, validationResult, param } from 'express-validator';
 
-import { GENDERS, STATES } from '../constants';
+import { STATES } from '../constants';
 
 const userQueryValidation = [
   query('page')
@@ -22,26 +22,27 @@ const userQueryValidation = [
   query('state').isString().optional().isLength({ min: 2 })
 ];
 
+//Gender dob city state zip
+
 const userCreationValidation = [
   body('email')
     .isString()
     .isEmail()
-    .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
   body('password')
     .isString()
     .isLength({ min: 8 })
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     ),
   body('fullName')
     .isString()
     .withMessage('Must provide your first and last name.'),
-  body('dob').isString().withMessage('Must provide your date of birth'),
+  body('dob').isString().optional(),
   body('city')
     .isString()
-    .withMessage('Must provide the city in which you stay.'),
+    .withMessage('Must provide the city in which you stay.')
+    .optional(),
   body('state')
     .isString()
     .custom(state => {
@@ -52,14 +53,19 @@ const userCreationValidation = [
       return true;
     })
     .isLength({ min: 2 })
+    .optional()
 ];
 
 const userUpdateValidation = [
   param('userId').isString().withMessage('Must provide a valid userId.'),
+  body('email')
+    .isString()
+    .isEmail()
+    .withMessage('Must provide a existing and valid email.')
+    .optional(),
   body('password')
     .isString()
     .isLength({ min: 8 })
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
@@ -139,6 +145,10 @@ const platfromQueryValidation = [
   query('platform').isString().withMessage('Must provide a device platform.')
 ];
 
+const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
+  return `${location}[${param}]: ${msg}`;
+};
+
 export {
   userCreationValidation,
   userUpdateValidation,
@@ -149,5 +159,6 @@ export {
   passwordRequestResetBodyValidation,
   changePasswordValidation,
   platfromQueryValidation,
-  otpBodyValidation
+  otpBodyValidation,
+  errorFormatter
 };
