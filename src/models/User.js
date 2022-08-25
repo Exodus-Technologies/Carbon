@@ -24,11 +24,10 @@ const userSchema = new Schema(
     },
     password: { type: String, required: true },
     fullName: { type: String, required: true },
-    dob: { type: String, required: true },
-    city: { type: String, required: true },
+    dob: { type: String },
+    city: { type: String },
     state: {
       type: String,
-      required: true,
       enum: STATES
     },
     isAdmin: {
