@@ -8,7 +8,7 @@ import noCache from 'nocache';
 import cors from 'cors';
 import responseTime from 'response-time';
 
-import { requestResponse, errorHandler } from './middlewares';
+import { requestResponse, errorHandler, rateLimiter } from './middlewares';
 import { appRouter, authRouter, userRouter } from './routes';
 
 // Create the Express application object
@@ -56,11 +56,11 @@ server.use(appRouter);
 console.log('Loaded server routes middleware.');
 
 //Auth middleware
-server.use(authRouter);
+server.use(rateLimiter, authRouter);
 console.log('Loaded auth routes middleware.');
 
 //User middleware
-server.use(userRouter);
+server.use(rateLimiter, userRouter);
 console.log('Loaded user routes middleware.');
 
 export default http.createServer(server);
