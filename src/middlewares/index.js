@@ -1,8 +1,10 @@
 'use strict';
 
 import NodeCache from 'node-cache';
-import { errorFormatter, validationResult } from '../validations';
+import rateLimit from 'express-rate-limit';
 import config from '../config';
+import { errorFormatter, validationResult } from '../validations';
+import { windowMs } from '../constants';
 
 const nodeCache = new NodeCache();
 const { defaultCacheTtl } = config;
@@ -24,6 +26,15 @@ const errorHandler = (err, req, res, next) => {
   res.status(err.status || 500).send(err.message);
 };
 
+const rateLimiter = rateLimit({
+  windowMs,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message:
+    'Too many accounts created from this IP, please try again after an hour'
+});
+
 const validationHandler = (req, res, next) => {
   const errors = validationResult(req).formatWith(errorFormatter);
   if (!errors.isEmpty()) {
@@ -32,7 +43,7 @@ const validationHandler = (req, res, next) => {
   next();
 };
 
-const cache = () => {
+const apiCache = () => {
   return (req, res, next) => {
     const key = `__express__${req.originalUrl || req.url}`;
     const cachedBody = nodeCache.get(key);
@@ -50,4 +61,10 @@ const cache = () => {
   };
 };
 
-export { requestResponse, errorHandler, validationHandler, cache };
+export {
+  requestResponse,
+  errorHandler,
+  validationHandler,
+  apiCache,
+  rateLimiter
+};

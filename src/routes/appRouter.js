@@ -1,7 +1,7 @@
 'use strict';
 
 import express from 'express';
-import { cache } from '../middlewares';
+import { apiCache } from '../middlewares';
 import { fancyTimeFormat } from '../utils/time';
 
 const { Router } = express;
@@ -9,7 +9,7 @@ const { version } = require('../../package.json');
 
 const router = Router();
 
-router.get('/auth-service/', cache(), (_, res) => {
+router.get('/auth-service/', apiCache(), (_, res) => {
   res.status(200).send({ message: 'Welcome to Carbon Auth Manager Service!' });
 });
 
