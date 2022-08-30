@@ -7,7 +7,6 @@ import {
   userIdParamValidation,
   userQueryValidation,
   userUpdateValidation
-  // platfromQueryValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
 
@@ -48,12 +47,5 @@ router.delete(
   validationHandler,
   UserController.deleteUser
 );
-
-// router.get(
-//   '/auth-service/getSubscriptionProducts',
-//   platfromQueryValidation,
-//   validationHandler,
-//   UserController.getSubscriptionProducts
-// );
 
 export default router;

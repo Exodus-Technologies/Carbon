@@ -9,7 +9,7 @@ const config = {
   CMS: process.env.CMS_HOST,
   HASH_SALT: Number(process.env.HASH_SALT),
   PASSWORD: process.env.PASSWORD,
-  jwtSecret: process.env.DB_PASS,
+  jwtSecret: process.env.JWT_SECRET,
   defaultCacheTtl: parseInt(process.env.DEFAULT_CACHE_TTL, 10),
   sources: {
     aws: {
