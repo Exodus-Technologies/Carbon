@@ -16,6 +16,10 @@ import {
   saveTransaction,
   verifyOptCode
 } from '../mongodb';
+import {
+  PASSWORD_RESET_REQUEST_SUBJECT,
+  PASSWORD_RESET_SUCCESS_SUBJECT
+} from '../constants';
 
 exports.validateLogin = async (email, password) => {
   try {
@@ -52,8 +56,8 @@ exports.validateLogin = async (email, password) => {
 
 exports.requestPasswordReset = async email => {
   try {
-    const user = await getUserByEmail(email);
     const transactionId = generateTransactionId();
+    const user = await getUserByEmail(email);
     if (!user) {
       const transaction = {
         transactionId,
@@ -67,9 +71,9 @@ exports.requestPasswordReset = async email => {
 
     const { userId } = user;
 
-    const token = await getCodeByUserId(userId);
+    const existingCode = await getCodeByUserId(userId);
 
-    if (token) {
+    if (existingCode) {
       await deleteCode(userId);
     }
 
@@ -84,7 +88,7 @@ exports.requestPasswordReset = async email => {
 
     const html = generateHtmlRequest(user, otpCode);
 
-    await sendMail(email, 'Password Reset Request', html);
+    await sendMail(email, PASSWORD_RESET_REQUEST_SUBJECT, html);
 
     const transaction = {
       transactionId,
@@ -151,7 +155,7 @@ exports.changePassword = async (email, token, password) => {
       if (updatedUser) {
         const { userId } = updatedUser;
         const html = generateHtmlReset(user);
-        await sendMail(email, 'Password Reset Successfully', html);
+        await sendMail(email, PASSWORD_RESET_SUCCESS_SUBJECT, html);
         const transaction = {
           transactionId,
           userId,
@@ -161,7 +165,7 @@ exports.changePassword = async (email, token, password) => {
           content: html
         };
         saveTransaction(transaction);
-        await deleteCode(updatedUser.userId);
+        await deleteCode(userId);
         return [
           200,
           {

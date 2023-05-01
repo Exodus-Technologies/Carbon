@@ -48,7 +48,7 @@ export const verifyJwtToken = token => {
     if (decoded) {
       return true;
     }
-    return true;
+    return false;
   } catch (err) {
     return false;
   }
