@@ -170,7 +170,7 @@ exports.changePassword = async (email, token, password) => {
         ];
       }
     }
-    return badRequest('Token provided does not match what the system has.');
+    return badRequest('Token provided does not match.');
   } catch (err) {
     console.log(`Error updating password: `, err);
     const transaction = {
