@@ -7,15 +7,13 @@ const config = {
   HOST: process.env.HOST,
   PORT: process.env.PORT,
   CMS: process.env.CMS_HOST,
-  HASH_SALT: Number(process.env.HASH_SALT),
+  HASH_SALT: +process.env.HASH_SALT,
   PASSWORD: process.env.PASSWORD,
   jwtSecret: process.env.JWT_SECRET,
-  defaultCacheTtl: parseInt(process.env.DEFAULT_CACHE_TTL, 10),
+  defaultCacheTtl: +process.env.DEFAULT_CACHE_TTL,
   sources: {
-    aws: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      region: process.env.AWS_REGION
+    twilio: {
+      sendGridAPIKey: process.env.SENDGRID_API_KEY
     },
     notifications: {
       noReplyEmail: process.env.NO_REPLY_EMAIL

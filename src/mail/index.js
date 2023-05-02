@@ -1,14 +1,16 @@
 'use strict';
 
 import config from '../config';
-import { sendSESNotification } from '../aws';
+import { sendEmailNotification } from '../twilio';
 
 const { CMS } = config;
 
 export const sendMail = async (toEmail, subject, content) => {
   try {
-    const notification = sendSESNotification(toEmail, content, subject);
-    if (notification) return notification;
+    const notification = sendEmailNotification(toEmail, content, subject);
+    if (notification) {
+      return notification;
+    }
   } catch {
     return undefined;
   }
