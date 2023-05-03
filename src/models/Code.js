@@ -27,7 +27,7 @@ const optCodeSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 3600 // this is the expiry time in seconds
+    expires: 900 // this is the expiry time in seconds (15 minutes)
   }
 });
 
