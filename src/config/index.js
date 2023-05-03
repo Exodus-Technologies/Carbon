@@ -13,9 +13,7 @@ const config = {
   defaultCacheTtl: +process.env.DEFAULT_CACHE_TTL,
   sources: {
     twilio: {
-      sendGridAPIKey: process.env.SENDGRID_API_KEY
-    },
-    notifications: {
+      sendGridAPIKey: process.env.SENDGRID_API_KEY,
       noReplyEmail: process.env.NO_REPLY_EMAIL
     },
     database: {

@@ -7,7 +7,7 @@ import {
   generateOTPCode,
   verifyJwtToken
 } from '../utils/token';
-import { sendMail, generateHtmlRequest, generateHtmlReset } from '../mail';
+import { EmailService } from '../services';
 import {
   getCodeByUserId,
   getUserByEmail,
@@ -82,13 +82,12 @@ exports.requestPasswordReset = async email => {
     await saveCodeRefToDB({
       userId,
       email,
-      otpCode,
-      createdAt: Date.now()
+      otpCode
     });
 
-    const html = generateHtmlRequest(user, otpCode);
+    const html = EmailService.generateHtmlRequestPayload(user, otpCode);
 
-    await sendMail(email, PASSWORD_RESET_REQUEST_SUBJECT, html);
+    EmailService.sendMail(email, PASSWORD_RESET_REQUEST_SUBJECT, html);
 
     const transaction = {
       transactionId,
@@ -154,8 +153,8 @@ exports.changePassword = async (email, token, password) => {
       const updatedUser = await user.save();
       if (updatedUser) {
         const { userId } = updatedUser;
-        const html = generateHtmlReset(user);
-        await sendMail(email, PASSWORD_RESET_SUCCESS_SUBJECT, html);
+        const html = EmailService.generateHtmlResetPayload(user);
+        EmailService.sendMail(email, PASSWORD_RESET_SUCCESS_SUBJECT, html);
         const transaction = {
           transactionId,
           userId,

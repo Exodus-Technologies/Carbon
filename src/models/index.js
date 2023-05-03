@@ -6,22 +6,26 @@
 import fs from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
-import { getDBUri } from '../mongodb';
+import config from '../config';
 
 const basename = path.basename(__filename);
 
 const models = {};
 
+const { clusterDomain } = config.sources.database;
+
 /**
- * Set event listener to mongoose.connection
+ * Set event listener to mongoose.connection on error
  */
 mongoose.connection.on('error', error => {
   console.log(error);
 });
 
+/**
+ * Set event listener to mongoose.connection on open
+ */
 mongoose.connection.on('open', () => {
-  const uri = getDBUri();
-  console.log(`Connected to ${uri}`);
+  console.log(`Connected to ${clusterDomain}....`);
 });
 
 /**
