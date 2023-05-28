@@ -5,14 +5,6 @@ import models from '../models';
 
 const { dbUser, dbPass, clusterDomain, dbName } = config.sources.database;
 
-const queryOps = {
-  __v: 0,
-  _id: 0,
-  password: 0,
-  createdAt: 0,
-  updatedAt: 0
-};
-
 export const getDBUri = () => {
   return `mongodb+srv://${dbUser}:${dbPass}@${clusterDomain}/${dbName}?retryWrites=true&w=majority`;
 };
@@ -23,6 +15,14 @@ export const getUsers = async query => {
     const page = parseInt(query.page);
     const limit = parseInt(query.limit);
     const skipIndex = (page - 1) * limit;
+
+    const queryOps = {
+      __v: 0,
+      _id: 0,
+      password: 0,
+      createdAt: 0,
+      updatedAt: 0
+    };
 
     const filter = [];
     for (const [key, value] of Object.entries(query)) {
@@ -75,7 +75,10 @@ export const getUserById = async userId => {
   try {
     const { User } = models;
     const user = await User.findOne({ userId });
-    return [null, user];
+    if (user) {
+      return user;
+    }
+    return null;
   } catch (err) {
     console.log('Error getting user data to db: ', err);
   }
@@ -139,7 +142,7 @@ export const updateUser = async (userId, payload) => {
       };
       return [null, user];
     } else {
-      return [Error('Unable to update user details.')];
+      return [new Error('Unable to update user details.')];
     }
   } catch (err) {
     console.log('Error updating user data to db: ', err);
@@ -150,7 +153,10 @@ export const deleteUserById = async userId => {
   try {
     const { User } = models;
     const deletedUser = await User.deleteOne({ userId });
-    return [null, deletedUser];
+    if (deletedUser.deletedCount > 0) {
+      return [null, deletedUser];
+    }
+    return [new Error('Unable to find user to delete details.')];
   } catch (err) {
     console.log('Error deleting user data from db: ', err);
   }
@@ -189,7 +195,10 @@ export const deleteCode = async userId => {
   try {
     const { Code } = models;
     const deletedCode = await Code.deleteOne({ userId });
-    return [null, deletedCode];
+    if (deletedCode.deletedCount > 0) {
+      return [null, deletedCode];
+    }
+    return [new Error('Unable to find code to delete details.')];
   } catch (err) {
     console.log('Error deleting code data from db: ', err);
   }
@@ -208,7 +217,6 @@ export const saveTransaction = async payload => {
 export const verifyOptCode = async (email, otpCode) => {
   try {
     const { Code } = models;
-    console.log(email, otpCode);
     const code = await Code.findOne({ email });
     if (code.otpCode === otpCode) {
       return [null, true];

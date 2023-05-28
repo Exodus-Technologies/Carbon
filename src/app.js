@@ -3,7 +3,6 @@
 import server from './server';
 import config from './config';
 import models from './models';
-import seedDb from './seed';
 import { getDBUri } from './mongodb';
 
 /**
@@ -35,19 +34,9 @@ const initDB = async () => {
   }
 };
 
-const seedDB = async () => {
-  try {
-    await seedDb();
-  } catch (e) {
-    console.log(`Error seeding to db: ${e}`);
-    throw e;
-  }
-};
-
 const init = async () => {
   console.log('Starting app...');
   await initDB();
-  await seedDB();
   await initServer();
 };
 

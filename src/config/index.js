@@ -2,6 +2,8 @@
 
 require('dotenv').config();
 
+import { stringToBoolean } from '../utils/boolean';
+
 const config = {
   NODE_ENV: process.env.NODE_ENV,
   HOST: process.env.HOST,
@@ -10,6 +12,8 @@ const config = {
   HASH_SALT: +process.env.HASH_SALT,
   PASSWORD: process.env.PASSWORD,
   jwtSecret: process.env.JWT_SECRET,
+  purgeSubscriptions: stringToBoolean(process.env.PURGE_SUBSCRIPTIONS),
+  subscriptionUri: process.env.SUBSCRIPTIONS_URI,
   defaultCacheTtl: +process.env.DEFAULT_CACHE_TTL,
   sources: {
     twilio: {
@@ -28,5 +32,7 @@ const config = {
     }
   }
 };
+
+console.log(config);
 
 export default config;

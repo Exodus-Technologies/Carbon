@@ -1,6 +1,6 @@
 {
   "name": "carbon",
-  "version": "2.1.9",
+  "version": "2.2.0",
   "description": "Microservice for all interactions for login, signup of users, and retrieving/updating user information for customers of Sheen magazine (Authentication Manager).",
   "main": "index.js",
   "scripts": {
@@ -45,7 +45,7 @@
     "nanoid": "^3.3.4",
     "nocache": "^3.0.1",
     "node-cache": "^5.1.2",
-    "node-fetch": "^3.2.6",
+    "node-fetch": "^2.6.1",
     "regenerator-runtime": "^0.13.9",
     "response-time": "^2.3.2"
   },
