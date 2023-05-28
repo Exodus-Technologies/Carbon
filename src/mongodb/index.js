@@ -75,7 +75,10 @@ export const getUserById = async userId => {
   try {
     const { User } = models;
     const user = await User.findOne({ userId });
-    return [null, user];
+    if (user) {
+      return user;
+    }
+    return null;
   } catch (err) {
     console.log('Error getting user data to db: ', err);
   }
@@ -139,7 +142,7 @@ export const updateUser = async (userId, payload) => {
       };
       return [null, user];
     } else {
-      return [Error('Unable to update user details.')];
+      return [new Error('Unable to update user details.')];
     }
   } catch (err) {
     console.log('Error updating user data to db: ', err);
@@ -150,7 +153,10 @@ export const deleteUserById = async userId => {
   try {
     const { User } = models;
     const deletedUser = await User.deleteOne({ userId });
-    return [null, deletedUser];
+    if (deletedUser.deletedCount > 0) {
+      return [null, deletedUser];
+    }
+    return [new Error('Unable to find user to delete details.')];
   } catch (err) {
     console.log('Error deleting user data from db: ', err);
   }
@@ -189,19 +195,12 @@ export const deleteCode = async userId => {
   try {
     const { Code } = models;
     const deletedCode = await Code.deleteOne({ userId });
-    return [null, deletedCode];
+    if (deletedCode.deletedCount > 0) {
+      return [null, deletedCode];
+    }
+    return [new Error('Unable to find code to delete details.')];
   } catch (err) {
     console.log('Error deleting code data from db: ', err);
-  }
-};
-
-export const deleteSubsciptions = async userId => {
-  try {
-  } catch (err) {
-    console.log(
-      `Error deleting subscription data from db for user: ${userId} `,
-      err
-    );
   }
 };
 

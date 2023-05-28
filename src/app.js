@@ -37,7 +37,6 @@ const initDB = async () => {
 const init = async () => {
   console.log('Starting app...');
   await initDB();
-  await seedDB();
   await initServer();
 };
 

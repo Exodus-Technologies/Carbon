@@ -8,6 +8,10 @@ import {
   updateUser,
   deleteUserById
 } from '../mongodb';
+import config from '../config';
+import SubscriptionService from './SubscriptionService';
+
+const { purgeSubscriptions } = config;
 
 exports.getUsers = async query => {
   try {
@@ -31,7 +35,7 @@ exports.getUsers = async query => {
 
 exports.getUser = async userId => {
   try {
-    const [error, user] = await getUserById(userId);
+    const user = await getUserById(userId);
     if (user) {
       return [
         200,
@@ -88,12 +92,16 @@ exports.deleteUser = async userId => {
   try {
     const user = await getUserById(userId);
     if (user) {
-      const deletedUser = await deleteUserById(userId);
+      if (purgeSubscriptions) {
+        SubscriptionService.deleteSubscriptions(userId);
+      }
+      const [error, deletedUser] = await deleteUserById(userId);
       if (deletedUser) {
         return [204];
       }
+      return badRequest(error.message);
     }
-    return badRequest(`No user found with id provided.`);
+    return badRequest('User does not exist.');
   } catch (err) {
     console.log('Error deleting user by id: ', err);
     return badImplementationRequest('Error deleting user by id.');
