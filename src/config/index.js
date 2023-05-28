@@ -13,7 +13,7 @@ const config = {
   PASSWORD: process.env.PASSWORD,
   jwtSecret: process.env.JWT_SECRET,
   purgeSubscriptions: stringToBoolean(process.env.PURGE_SUBSCRIPTIONS),
-  subscriptionUri: process.env.SUBSCRIPTIONS_URI,
+  subscriptionURI: process.env.SUBSCRIPTIONS_URI,
   defaultCacheTtl: +process.env.DEFAULT_CACHE_TTL,
   sources: {
     twilio: {
@@ -32,7 +32,5 @@ const config = {
     }
   }
 };
-
-console.log(config);
 
 export default config;

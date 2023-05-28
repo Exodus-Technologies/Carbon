@@ -4,6 +4,7 @@ import { customAlphabet } from 'nanoid';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import config from '../config';
+import { TOKEN_EXPIRY } from '../constants';
 
 const { sign, verify } = jwt;
 const { jwtSecret } = config;
@@ -26,7 +27,7 @@ export const generateOTPCode = () => {
 
 export const generateAuthJwtToken = user => {
   const { isAdmin, email, userId } = user;
-  const expirationTime = moment().add(15, 'minutes').valueOf() / 1000;
+  const expirationTime = moment().add(TOKEN_EXPIRY, 'minutes').valueOf() / 1000;
   const payload = { isAdmin, email, userId };
   try {
     const token = sign(

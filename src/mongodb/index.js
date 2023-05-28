@@ -76,9 +76,9 @@ export const getUserById = async userId => {
     const { User } = models;
     const user = await User.findOne({ userId });
     if (user) {
-      return user;
+      return [null, user];
     }
-    return null;
+    return [new Error('User with id does not exist.')];
   } catch (err) {
     console.log('Error getting user data to db: ', err);
   }
@@ -94,16 +94,16 @@ export const getUserByEmail = async email => {
     const { User } = models;
     const user = await User.findOne({ email }, opts);
     if (user) {
-      return user;
+      return [null, user];
     }
-    return null;
+    return [new Error('Unable to find user with email provided.')];
   } catch (err) {
     console.log('Error getting user data to db: ', err);
     return [new Error('No user found associated with email provided.')];
   }
 };
 
-export const saveUserRefToDB = async payload => {
+export const createUser = async payload => {
   try {
     const { User } = models;
     const { email } = payload;
@@ -167,15 +167,15 @@ export const getCodeByUserId = async userId => {
     const { Code } = models;
     const code = await Code.findOne({ userId });
     if (code) {
-      return code;
+      return [null, code];
     }
-    return null;
+    return [new Error('Unable to find code associated with user.')];
   } catch (err) {
     console.log('Error getting otpCode for user data to db: ', err);
   }
 };
 
-export const saveCodeRefToDB = async payload => {
+export const createOtpCode = async payload => {
   try {
     const { Code } = models;
     const { userId } = payload;
