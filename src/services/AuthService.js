@@ -11,7 +11,7 @@ import { EmailService } from '../services';
 import {
   getCodeByUserId,
   getUserByEmail,
-  saveCodeRefToDB,
+  createOtpCode,
   deleteCode,
   saveTransaction,
   verifyOptCode
@@ -23,7 +23,7 @@ import {
 
 exports.validateLogin = async (email, password) => {
   try {
-    const user = await getUserByEmail(email);
+    const [error, user] = await getUserByEmail(email);
     if (user) {
       const validPassword = user.comparePassword(password);
       if (validPassword) {
@@ -49,7 +49,7 @@ exports.validateLogin = async (email, password) => {
         'Username and password combination was incorrect for user.'
       );
     }
-    return badRequest('Unable to find user with email provided.');
+    return badRequest(error.message);
   } catch (err) {
     console.log(`Error logging with credentials: `, err);
     return badImplementationRequest('Error logging with credentials.');
@@ -59,7 +59,7 @@ exports.validateLogin = async (email, password) => {
 exports.requestPasswordReset = async email => {
   try {
     const transactionId = generateTransactionId();
-    const user = await getUserByEmail(email);
+    const [error, user] = await getUserByEmail(email);
     if (!user) {
       const transaction = {
         transactionId,
@@ -68,12 +68,12 @@ exports.requestPasswordReset = async email => {
         reason: 'Email supplied is not registered to any user.'
       };
       saveTransaction(transaction);
-      return badRequest('Unable to find user with email provided.');
+      return badRequest(error.message);
     }
 
     const { userId } = user;
 
-    const existingCode = await getCodeByUserId(userId);
+    const [_, existingCode] = await getCodeByUserId(userId);
 
     if (existingCode) {
       await deleteCode(userId);
@@ -81,7 +81,7 @@ exports.requestPasswordReset = async email => {
 
     const otpCode = generateOTPCode();
 
-    await saveCodeRefToDB({
+    await createOtpCode({
       userId,
       email,
       otpCode
@@ -122,7 +122,7 @@ exports.verifyOTP = async (email, otpCode) => {
   try {
     const [error, isVerified] = await verifyOptCode(email, otpCode);
     if (isVerified) {
-      const user = await getUserByEmail(email);
+      const [_, user] = await getUserByEmail(email);
       const token = generateAuthJwtToken(user);
       return [200, { message: 'Code was verified successfully.', token }];
     }
@@ -136,7 +136,7 @@ exports.verifyOTP = async (email, otpCode) => {
 exports.changePassword = async (email, token, password) => {
   try {
     const transactionId = generateTransactionId();
-    const user = await getUserByEmail(email);
+    const [error, user] = await getUserByEmail(email);
 
     if (!user) {
       const transaction = {
@@ -146,7 +146,7 @@ exports.changePassword = async (email, token, password) => {
         reason: 'Email supplied is not registered to any user.'
       };
       saveTransaction(transaction);
-      return badRequest('No user found associated with email provided.');
+      return badRequest(error.message);
     }
 
     const isVerified = verifyJwtToken(token);

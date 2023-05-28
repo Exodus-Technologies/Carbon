@@ -5,13 +5,13 @@ const fetch = (...args) =>
 
 import config from '../config';
 
-const { subscriptionUri } = config;
+const { subscriptionURI } = config;
 
 exports.deleteSubscriptions = userId => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${subscriptionUri}/deleteSubscriptions/${userId}/`,
+        `${subscriptionURI}/deleteSubscriptions/${userId}/`,
         {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' }
@@ -24,7 +24,7 @@ exports.deleteSubscriptions = userId => {
         );
         resolve();
       }
-      if (response.status > 500) {
+      if (response.status >= 500) {
         reject();
       }
       resolve();

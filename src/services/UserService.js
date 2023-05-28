@@ -1,21 +1,19 @@
 'use strict';
 
+import config from '../config';
+import SubscriptionService from './SubscriptionService';
 import { badRequest, badImplementationRequest } from '../response-codes';
 import {
   getUsers,
-  saveUserRefToDB,
+  createUser,
   getUserById,
   updateUser,
   deleteUserById
 } from '../mongodb';
-import config from '../config';
-import SubscriptionService from './SubscriptionService';
-
-const { purgeSubscriptions } = config;
 
 exports.getUsers = async query => {
   try {
-    const users = await getUsers(query);
+    const [_, users] = await getUsers(query);
     if (users) {
       return [
         200,
@@ -35,7 +33,7 @@ exports.getUsers = async query => {
 
 exports.getUser = async userId => {
   try {
-    const user = await getUserById(userId);
+    const [error, user] = await getUserById(userId);
     if (user) {
       return [
         200,
@@ -54,7 +52,7 @@ exports.getUser = async userId => {
 
 exports.createUser = async payload => {
   try {
-    const [error, user] = await saveUserRefToDB(payload);
+    const [error, user] = await createUser(payload);
     if (user) {
       return [
         201,
@@ -89,8 +87,9 @@ exports.updateUser = async (userId, payload) => {
 };
 
 exports.deleteUser = async userId => {
+  const { purgeSubscriptions } = config;
   try {
-    const user = await getUserById(userId);
+    const [error, user] = await getUserById(userId);
     if (user) {
       if (purgeSubscriptions) {
         SubscriptionService.deleteSubscriptions(userId);
@@ -101,7 +100,7 @@ exports.deleteUser = async userId => {
       }
       return badRequest(error.message);
     }
-    return badRequest('User does not exist.');
+    return badRequest(error.message);
   } catch (err) {
     console.log('Error deleting user by id: ', err);
     return badImplementationRequest('Error deleting user by id.');

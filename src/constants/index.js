@@ -64,6 +64,8 @@ export const STATES = [
 
 export const windowMs = 15 * 60 * 1000; // 15 minutes
 
+export const TOKEN_EXPIRY = 15;
+
 export const PASSWORD_RESET_REQUEST_SUBJECT = 'Password Reset Request';
 
 export const PASSWORD_RESET_SUCCESS_SUBJECT = 'Password Reset Successfully';
