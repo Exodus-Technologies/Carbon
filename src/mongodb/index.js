@@ -5,14 +5,6 @@ import models from '../models';
 
 const { dbUser, dbPass, clusterDomain, dbName } = config.sources.database;
 
-const queryOps = {
-  __v: 0,
-  _id: 0,
-  password: 0,
-  createdAt: 0,
-  updatedAt: 0
-};
-
 export const getDBUri = () => {
   return `mongodb+srv://${dbUser}:${dbPass}@${clusterDomain}/${dbName}?retryWrites=true&w=majority`;
 };
@@ -23,6 +15,14 @@ export const getUsers = async query => {
     const page = parseInt(query.page);
     const limit = parseInt(query.limit);
     const skipIndex = (page - 1) * limit;
+
+    const queryOps = {
+      __v: 0,
+      _id: 0,
+      password: 0,
+      createdAt: 0,
+      updatedAt: 0
+    };
 
     const filter = [];
     for (const [key, value] of Object.entries(query)) {
@@ -195,6 +195,16 @@ export const deleteCode = async userId => {
   }
 };
 
+export const deleteSubsciptions = async userId => {
+  try {
+  } catch (err) {
+    console.log(
+      `Error deleting subscription data from db for user: ${userId} `,
+      err
+    );
+  }
+};
+
 export const saveTransaction = async payload => {
   try {
     const { Transaction } = models;
@@ -208,7 +218,6 @@ export const saveTransaction = async payload => {
 export const verifyOptCode = async (email, otpCode) => {
   try {
     const { Code } = models;
-    console.log(email, otpCode);
     const code = await Code.findOne({ email });
     if (code.otpCode === otpCode) {
       return [null, true];

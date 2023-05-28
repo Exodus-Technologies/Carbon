@@ -45,7 +45,9 @@ exports.validateLogin = async (email, password) => {
           }
         ];
       }
-      return badRequest('Incorrect credentials used for login.');
+      return badRequest(
+        'Username and password combination was incorrect for user.'
+      );
     }
     return badRequest('Unable to find user with email provided.');
   } catch (err) {
