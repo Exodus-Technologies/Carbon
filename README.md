@@ -63,12 +63,12 @@ Carbon utilizes dotenv[https://github.com/motdotla/dotenv] for environment varia
 - DB_USER (databse user name)
 - DB_PASS (databse user password)
 - HASH_SALT (number to use to generate cryptic password)
-- PASSWORD (password for seeded users)
-- AWS_ACCESS_KEY_ID (AWS access key)
-- AWS_SECRET_ACCESS_KEY (AWS secret access key)
-- AWS_REGION (AWS region)
 - NO_REPLY_EMAIL (sender email address)
 - CMS_HOST (host name for sheen magazine cms)
+- JWT_SECRET (secret key for JWT siging)
+- SENDGRID_API_KEY (API Key for SendGrid)
+- PURGE_SUBSCRIPTIONS (Boolean flag to purge subscription for deleted user accounts)
+- SUBSCRIPTIONS_URI (URI to connect to purge accounts)
 
 # Running the project (development mode)
 
