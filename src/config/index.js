@@ -1,8 +1,9 @@
 'use strict';
 
-require('dotenv').config();
-
+import * as dotenv from 'dotenv';
 import { stringToBoolean } from '../utils/boolean';
+
+dotenv.config();
 
 const config = {
   NODE_ENV: process.env.NODE_ENV,
@@ -10,7 +11,6 @@ const config = {
   PORT: process.env.PORT,
   CMS: process.env.CMS_HOST,
   HASH_SALT: +process.env.HASH_SALT,
-  PASSWORD: process.env.PASSWORD,
   jwtSecret: process.env.JWT_SECRET,
   purgeSubscriptions: stringToBoolean(process.env.PURGE_SUBSCRIPTIONS),
   subscriptionURI: process.env.SUBSCRIPTIONS_URI,

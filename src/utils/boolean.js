@@ -5,12 +5,14 @@ export const stringToBoolean = str => {
     case 'true':
     case 'yes':
     case '1':
+    case 'on':
       return true;
 
     case 'false':
     case 'no':
     case '0':
     case null:
+    case 'off':
     case undefined:
       return false;
 

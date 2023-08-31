@@ -2,6 +2,7 @@
 
 import config from '../config';
 import models from '../models';
+import { stringToBoolean } from '../utils/boolean';
 
 const { dbUser, dbPass, clusterDomain, dbName } = config.sources.database;
 
@@ -122,14 +123,14 @@ export const createUser = async payload => {
 export const updateUser = async (userId, payload) => {
   try {
     const { User } = models;
-    const { email } = payload;
+    const { email, isAdmin } = payload;
     const user = await User.findOne({ email });
     if (user) {
       return [Error('Unable to change email. Email already in use.')];
     }
     const filter = { userId };
     const options = { new: true };
-    const update = { ...payload };
+    const update = { ...payload, isAdmin: stringToBoolean(isAdmin) };
     const updatedUser = await User.findOneAndUpdate(filter, update, options);
     if (updatedUser) {
       const { email, fullName, city, state, isAdmin } = updatedUser;
