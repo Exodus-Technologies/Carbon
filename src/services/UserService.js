@@ -81,7 +81,7 @@ exports.updateUser = async (userId, payload) => {
     }
     return badRequest(error.message);
   } catch (err) {
-    console.log('Error updating views on user: ', err);
+    console.log('Error updating user: ', err);
     return badImplementationRequest('Error updating user.');
   }
 };
