@@ -107,10 +107,11 @@ export const getUserByEmail = async email => {
 export const createUser = async payload => {
   try {
     const { User } = models;
-    const { email } = payload;
+    const { email, isAdmin } = payload;
     const user = await User.findOne({ email });
     if (!user) {
-      const user = new User(payload);
+      const body = { ...payload, isAdmin: stringToBoolean(isAdmin) };
+      const user = new User(body);
       const createdUser = await user.save();
       return [null, createdUser];
     }
