@@ -53,7 +53,8 @@ const userCreationValidation = [
       return true;
     })
     .isLength({ min: 2 })
-    .optional()
+    .optional(),
+  body('zipCode').isString().isLength({ min: 5 }).optional()
 ];
 
 const userUpdateValidation = [
@@ -88,7 +89,8 @@ const userUpdateValidation = [
       return true;
     })
     .isLength({ min: 2 })
-    .optional()
+    .optional(),
+  body('zipCode').isString().isLength({ min: 5 }).optional()
 ];
 
 const userIdParamValidation = [
