@@ -5,7 +5,7 @@
  */
 import { query, body, validationResult, param } from 'express-validator';
 
-import { STATES } from '../constants';
+import { STATES, PASSWORD_REGEX } from '../constants';
 
 const userQueryValidation = [
   query('page')
@@ -22,16 +22,16 @@ const userQueryValidation = [
   query('state').isString().optional().isLength({ min: 2 })
 ];
 
-//Gender dob city state zip
-
 const userCreationValidation = [
   body('email')
     .isString()
     .isEmail()
+    .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
   body('password')
     .isString()
     .isLength({ min: 8 })
+    .matches(PASSWORD_REGEX)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     ),
@@ -53,7 +53,8 @@ const userCreationValidation = [
       return true;
     })
     .isLength({ min: 2 })
-    .optional()
+    .optional(),
+  body('zipCode').isString().isLength({ min: 5 }).optional()
 ];
 
 const userUpdateValidation = [
@@ -61,11 +62,13 @@ const userUpdateValidation = [
   body('email')
     .isString()
     .isEmail()
+    .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.')
     .optional(),
   body('password')
     .isString()
     .isLength({ min: 8 })
+    .matches(PASSWORD_REGEX)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
@@ -88,7 +91,8 @@ const userUpdateValidation = [
       return true;
     })
     .isLength({ min: 2 })
-    .optional()
+    .optional(),
+  body('zipCode').isString().isLength({ min: 5 }).optional()
 ];
 
 const userIdParamValidation = [
@@ -98,12 +102,13 @@ const userIdParamValidation = [
 const loginValidation = [
   body('email')
     .isString()
+    .isEmail()
     .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
   body('password')
     .isString()
     .isLength({ min: 8 })
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
+    .matches(PASSWORD_REGEX)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
@@ -112,13 +117,14 @@ const loginValidation = [
 const changePasswordValidation = [
   body('email')
     .isString()
+    .isEmail()
     .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
   body('token').isString().withMessage('Must provide a token.'),
   body('password')
     .isString()
     .isLength({ min: 8 })
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
+    .matches(PASSWORD_REGEX)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
