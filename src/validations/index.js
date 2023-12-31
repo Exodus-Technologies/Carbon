@@ -5,7 +5,7 @@
  */
 import { query, body, validationResult, param } from 'express-validator';
 
-import { STATES, PASSWORD_REGEX } from '../constants';
+import { STATES, STRONG_PASSWORD_VALIDATIONS } from '../constants';
 
 const userQueryValidation = [
   query('page')
@@ -22,6 +22,10 @@ const userQueryValidation = [
   query('state').isString().optional().isLength({ min: 2 })
 ];
 
+const userIdParamValidation = [
+  param('userId').isString().withMessage('Must provide a existing user id.')
+];
+
 const userCreationValidation = [
   body('email')
     .isString()
@@ -31,7 +35,7 @@ const userCreationValidation = [
   body('password')
     .isString()
     .isLength({ min: 8 })
-    .matches(PASSWORD_REGEX)
+    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     ),
@@ -68,7 +72,7 @@ const userUpdateValidation = [
   body('password')
     .isString()
     .isLength({ min: 8 })
-    .matches(PASSWORD_REGEX)
+    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
@@ -95,10 +99,6 @@ const userUpdateValidation = [
   body('zipCode').isString().isLength({ min: 5 }).optional()
 ];
 
-const userIdParamValidation = [
-  param('userId').isString().withMessage('Must provide a existing user id.')
-];
-
 const loginValidation = [
   body('email')
     .isString()
@@ -108,7 +108,7 @@ const loginValidation = [
   body('password')
     .isString()
     .isLength({ min: 8 })
-    .matches(PASSWORD_REGEX)
+    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
@@ -124,7 +124,7 @@ const changePasswordValidation = [
   body('password')
     .isString()
     .isLength({ min: 8 })
-    .matches(PASSWORD_REGEX)
+    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
