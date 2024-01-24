@@ -72,3 +72,6 @@ export const PASSWORD_RESET_SUCCESS_SUBJECT = 'Password Reset Successfully';
 
 export const STRONG_PASSWORD_VALIDATIONS_REGEX =
   '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{8,}$';
+
+export const PASSWORD_VALIDATION_MESSAGE =
+  'Please enter a password at least 8 characters, at least one uppercase letter, one lowercase letter, and one special character.';

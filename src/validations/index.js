@@ -5,7 +5,11 @@
  */
 import { query, body, validationResult, param } from 'express-validator';
 
-import { STATES, STRONG_PASSWORD_VALIDATIONS_REGEX } from '../constants';
+import {
+  STATES,
+  STRONG_PASSWORD_VALIDATIONS_REGEX,
+  PASSWORD_VALIDATION_MESSAGE
+} from '../constants';
 
 const userQueryValidation = [
   query('page')
@@ -35,9 +39,7 @@ const userCreationValidation = [
   body('password')
     .isString()
     .matches(STRONG_PASSWORD_VALIDATIONS_REGEX)
-    .withMessage(
-      'Please enter a password at least 8 characters, at least one uppercase letter, one lowercase letter, and one special character.'
-    ),
+    .withMessage(PASSWORD_VALIDATION_MESSAGE),
   body('fullName')
     .isString()
     .withMessage('Must provide your first and last name.'),
@@ -71,9 +73,7 @@ const userUpdateValidation = [
   body('password')
     .isString()
     .matches(STRONG_PASSWORD_VALIDATIONS_REGEX)
-    .withMessage(
-      'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
-    )
+    .withMessage(PASSWORD_VALIDATION_MESSAGE)
     .optional(),
   body('fullName')
     .isString()
@@ -103,11 +103,7 @@ const loginValidation = [
     .isEmail()
     .matches(/\S+@\S+\.\S+/)
     .withMessage('Must provide a existing and valid email.'),
-  body('password')
-    .isString()
-    .withMessage(
-      'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
-    )
+  body('password').isString().withMessage(PASSWORD_VALIDATION_MESSAGE)
 ];
 
 const changePasswordValidation = [
@@ -120,9 +116,7 @@ const changePasswordValidation = [
   body('password')
     .isString()
     .isStrongPassword(STRONG_PASSWORD_VALIDATIONS_REGEX)
-    .withMessage(
-      'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
-    )
+    .withMessage(PASSWORD_VALIDATION_MESSAGE)
 ];
 
 const passwordRequestResetBodyValidation = [
