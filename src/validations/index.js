@@ -5,7 +5,7 @@
  */
 import { query, body, validationResult, param } from 'express-validator';
 
-import { STATES, STRONG_PASSWORD_VALIDATIONS } from '../constants';
+import { STATES, STRONG_PASSWORD_VALIDATIONS_REGEX } from '../constants';
 
 const userQueryValidation = [
   query('page')
@@ -34,10 +34,9 @@ const userCreationValidation = [
     .withMessage('Must provide a existing and valid email.'),
   body('password')
     .isString()
-    .isLength({ min: 8 })
-    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS)
+    .matches(STRONG_PASSWORD_VALIDATIONS_REGEX)
     .withMessage(
-      'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
+      'Please enter a password at least 8 characters, at least one uppercase letter, one lowercase letter, and one special character.'
     ),
   body('fullName')
     .isString()
@@ -71,8 +70,7 @@ const userUpdateValidation = [
     .optional(),
   body('password')
     .isString()
-    .isLength({ min: 8 })
-    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS)
+    .matches(STRONG_PASSWORD_VALIDATIONS_REGEX)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
@@ -107,8 +105,6 @@ const loginValidation = [
     .withMessage('Must provide a existing and valid email.'),
   body('password')
     .isString()
-    .isLength({ min: 8 })
-    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )
@@ -123,8 +119,7 @@ const changePasswordValidation = [
   body('token').isString().withMessage('Must provide a token.'),
   body('password')
     .isString()
-    .isLength({ min: 8 })
-    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS)
+    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS_REGEX)
     .withMessage(
       'Please enter a password at least 8 character and contain at least one uppercase, least one lower case, and at least one special character.'
     )

@@ -70,9 +70,5 @@ export const PASSWORD_RESET_REQUEST_SUBJECT = 'Password Reset Request';
 
 export const PASSWORD_RESET_SUCCESS_SUBJECT = 'Password Reset Successfully';
 
-export const STRONG_PASSWORD_VALIDATIONS = {
-  minLength: 8,
-  minLowercase: 1,
-  minUppercase: 1,
-  minSymbols: 1
-};
+export const STRONG_PASSWORD_VALIDATIONS_REGEX =
+  '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{8,}$';
