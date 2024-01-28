@@ -115,7 +115,7 @@ const changePasswordValidation = [
   body('token').isString().withMessage('Must provide a token.'),
   body('password')
     .isString()
-    .isStrongPassword(STRONG_PASSWORD_VALIDATIONS_REGEX)
+    .matches(STRONG_PASSWORD_VALIDATIONS_REGEX)
     .withMessage(PASSWORD_VALIDATION_MESSAGE)
 ];
 
